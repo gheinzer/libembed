@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-namespace ghcl::util {
+namespace embd::util {
     void init();
 
     void delay(uint32_t delay);

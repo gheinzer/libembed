@@ -1,5 +1,5 @@
-#ifndef GHCL_HAL_SPECIFICS_H_
-#define GHCL_HAL_SPECIFICS_H_
+#ifndef LIBEMBED_HAL_SPECIFICS_H_
+#define LIBEMBED_HAL_SPECIFICS_H_
 
 #define __SPECIFICS_CONCAT2(a, b) a##b
 #define __SPECIFICS_CONCAT3(a, b, c) a##b##c
@@ -62,4 +62,4 @@
 
 #endif /* STM32F4 */ 
 
-#endif /* GHCL_HAL_SPECIFICS_H_ */
+#endif /* LIBEMBED_HAL_SPECIFICS_H_ */

@@ -1,13 +1,9 @@
 {
     "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
-    "name": "GHCL",
-    "version": "1.0.0",
+    "name": "libembed",
     "build": {
-        "flags": "-std=gnu++17",
-        "unflags": "-nostdlib",
         "srcDir": "src",
         "includeDir": "include",
-        "libLDFMode": "deep+",
         "extraScript": "scripts/pio_set_global_flags.py"
     },
     "frameworks": ["stm32cube"],

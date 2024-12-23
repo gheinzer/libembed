@@ -1,8 +1,8 @@
-#include <ghcl/util/coroutines.hpp>
-#include <ghcl/hal/vcp_serial.hpp>
+#include <libembed/util/coroutines.hpp>
+#include <libembed/hal/vcp_serial.hpp>
 #include <vector>
 
-using namespace ghcl;
+using namespace embd;
 
 // *** Global variables ***
 static std::vector<coroutines::Context> activeContexts_ = {};

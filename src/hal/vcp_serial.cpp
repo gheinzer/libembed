@@ -1,5 +1,5 @@
-// #include <ghcl/hal/vcp_serial.hpp>
-// #include <ghcl/hal/stm32_hal.h>
+// #include <libembed/hal/vcp_serial.hpp>
+// #include <libembed/hal/stm32_hal.h>
 // #include <string.h>
 
 // UART_HandleTypeDef vcp_serial::uartHandle = { 0 };

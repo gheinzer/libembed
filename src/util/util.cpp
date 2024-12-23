@@ -1,7 +1,7 @@
-#include <ghcl/util/util.hpp>
-#include <ghcl/hal/stm32_hal.h>
+#include <libembed/util/util.hpp>
+#include <libembed/hal/stm32_hal.h>
 
-using namespace ghcl;
+using namespace embd;
 
 void util::init() {
     HAL_Init();

@@ -1,6 +1,8 @@
-#include <ghcl/hal/gpio.hpp>
+#include <libembed/hal/gpio.hpp>
 
 __GPIO_DEFINEPORTS_C;
+
+using namespace embd;
 
 static void __gpio_init() {
     __FORALLPORTS_PS(__HAL_RCC_GPIO, _CLK_ENABLE());
