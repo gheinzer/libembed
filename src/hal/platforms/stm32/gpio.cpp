@@ -10,12 +10,27 @@ void gpio::init() {
 }
 
 // *** gpio::DigitalOutput ***
-gpio::DigitalOutput::DigitalOutput(gpio::GPIO_t &gpio, uint32_t mode) : gpio_(gpio) {
+gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, uint32_t flags) : gpio_(gpio) {
+    gpio::init();
+
     GPIO_InitTypeDef initStruct;
-    initStruct.Pull = GPIO_NOPULL;
+
+    if(flags & GPIO_Flags::PULLUP) {
+        initStruct.Pull = GPIO_PULLUP;
+    } else if(flags & GPIO_Flags::PULLDOWN) {
+        initStruct.Pull = GPIO_PULLDOWN;
+    } else {
+        initStruct.Pull = GPIO_NOPULL;
+    }
+
+    if(flags & GPIO_Flags::OPENDRAIN) {
+        initStruct.Mode = GPIO_MODE_OUTPUT_OD;
+    } else {
+        initStruct.Mode = GPIO_MODE_OUTPUT_PP;
+    }
+
     initStruct.Pin = gpio_.pin;
     initStruct.Speed = GPIO_SPEED_FAST;
-    initStruct.Mode = mode;
     
     HAL_GPIO_Init(gpio_.port, &initStruct);
 }
@@ -32,12 +47,20 @@ void gpio::DigitalOutput::toggle() {
 }
 
 // *** gpio::DigitalInput ***
-gpio::DigitalInput::DigitalInput(GPIO_t &gpio, uint32_t mode) : gpio_(gpio) {
+gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, uint32_t flags) : gpio_(gpio) {
     GPIO_InitTypeDef initStruct;
-    initStruct.Pull = GPIO_NOPULL;
+
+    if(flags & GPIO_Flags::PULLUP) {
+        initStruct.Pull = GPIO_PULLUP;
+    } else if(flags & GPIO_Flags::PULLDOWN) {
+        initStruct.Pull = GPIO_PULLDOWN;
+    } else {
+        initStruct.Pull = GPIO_NOPULL;
+    }
+
     initStruct.Pin = gpio_.pin;
     initStruct.Speed = GPIO_SPEED_FAST;
-    initStruct.Mode = mode;
+    initStruct.Mode = GPIO_MODE_INPUT;
     
     HAL_GPIO_Init(gpio_.port, &initStruct);
 }

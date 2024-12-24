@@ -1,8 +1,8 @@
 #include "stm32_hal.h"
 #include <libembed/hal/gpio/types.h>
 
-#define __GPIO_DEFINEPIN_H(port, pin) extern GPIO_t P##port##pin;
-#define __GPIO_DEFINEPIN_C(_port, _pin) embed::gpio::GPIO_t embed::gpio::P##_port##_pin = { .port = GPIO##_port, .pin = GPIO_PIN_##_pin };
+#define __GPIO_DEFINEPIN_H(port, pin) extern GPIO_Pin P##port##pin;
+#define __GPIO_DEFINEPIN_C(_port, _pin) embed::gpio::GPIO_Pin embed::gpio::P##_port##_pin = { .port = GPIO##_port, .pin = GPIO_PIN_##_pin };
 
 #define __GPIO_DEFINEPORT_H(port) __FORALLPINS_FPORT(__GPIO_DEFINEPIN_H, port)
 #define __GPIO_DEFINEPORT_C(port) __FORALLPINS_FPORT(__GPIO_DEFINEPIN_C, port)
@@ -37,9 +37,42 @@
 #endif
 
 namespace embed::gpio {
-    struct GPIO {
+    struct __GPIO_Pin {
         GPIO_TypeDef* port;
         uint32_t pin;
+    };
+
+    struct __GPIO_Flags {
+        enum value {
+            NONE = 0,
+            PUSHPULL = 1,
+            OPENDRAIN = 2,
+            PULLUP = 4,
+            PULLDOWN = 8
+        };
+    };
+
+    class DigitalOutput : public __DigitalOutput_Base {
+        private:
+            GPIO_Pin& gpio_;
+
+        public:
+            DigitalOutput(GPIO_Pin& gpio, uint32_t flags = GPIO_Flags::NONE);
+
+            void write(bool state) override;
+            void toggle() override;
+            void enable() override;
+            void disable() override;
+    };
+
+    class DigitalInput : public __DigitalInput_Base {
+        private:
+            GPIO_Pin& gpio_;
+
+        public:
+            DigitalInput(GPIO_Pin& gpio, uint32_t flags = GPIO_Flags::NONE);
+
+            bool read() override;
     };
 
     __GPIO_DEFINEPORTS_H;

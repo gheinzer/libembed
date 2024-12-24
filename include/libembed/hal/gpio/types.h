@@ -6,29 +6,24 @@
 namespace embed::gpio {
     void init();
 
-    typedef struct GPIO GPIO_t;
+    /**
+     * @brief Opaque data structure defining a hardware pin.
+     */
+    typedef struct __GPIO_Pin GPIO_Pin;
 
-    class DigitalOutput {
-        private:
-            GPIO_t& gpio_;
+    typedef struct __GPIO_Flags GPIO_Flags;
 
+    class __DigitalOutput_Base {        
         public:
-            DigitalOutput(GPIO_t& gpio, uint32_t mode);
-
-            void write(bool state);
-            void toggle();
-            void enable();
-            void disable();
+            virtual void write(bool state);
+            virtual void toggle();
+            virtual void enable();
+            virtual void disable();
     };
 
-    class DigitalInput {
-        private:
-            GPIO &gpio_;
-
+    class __DigitalInput_Base {
         public:
-            DigitalInput(GPIO &gpio, uint32_t mode);
-
-            bool read();
+            virtual bool read();
     };
 }
 
