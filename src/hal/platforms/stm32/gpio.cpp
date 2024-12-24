@@ -1,6 +1,8 @@
 #include <libembed/hal/platforms/stm32/gpio.h>
 #include <libembed/hal/gpio.h>
 
+#if PIOPLATFORM == ststm32
+
 using namespace embed;
 
 __GPIO_DEFINEPORTS_C;
@@ -66,3 +68,5 @@ gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, uint32_t flags) : gpio_(gpio) {
 }
 
 bool gpio::DigitalInput::read() { return HAL_GPIO_ReadPin(gpio_.port, gpio_.pin) == GPIO_PIN_SET; }
+
+#endif /* PIOPLATFORM == ststm32 */

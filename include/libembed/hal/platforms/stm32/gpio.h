@@ -1,6 +1,9 @@
 #include "stm32_hal.h"
 #include <libembed/hal/gpio/types.h>
 
+#ifndef LIBEMBED_STM32_GPIO_H_
+#define LIBEMBED_STM32_GPIO_H_
+
 #define __GPIO_DEFINEPIN_H(port, pin) extern GPIO_Pin P##port##pin;
 #define __GPIO_DEFINEPIN_C(_port, _pin) embed::gpio::GPIO_Pin embed::gpio::P##_port##_pin = { .port = GPIO##_port, .pin = GPIO_PIN_##_pin };
 
@@ -77,3 +80,5 @@ namespace embed::gpio {
 
     __GPIO_DEFINEPORTS_H;
 }
+
+#endif /* LIBEMBED_STM32_GPIO_H_ */
