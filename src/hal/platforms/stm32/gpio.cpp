@@ -12,7 +12,7 @@ void gpio::init() {
 }
 
 // *** gpio::DigitalOutput ***
-gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, uint32_t flags) : gpio_(gpio) {
+gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio) {
     gpio::init();
 
     GPIO_InitTypeDef initStruct;
@@ -37,9 +37,6 @@ gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, uint32_t flags) : gpio_
     HAL_GPIO_Init(gpio_.port, &initStruct);
 }
 
-void gpio::DigitalOutput::enable() { write(true); }
-void gpio::DigitalOutput::disable() { write(false); }
-
 void gpio::DigitalOutput::write(bool state) {
     HAL_GPIO_WritePin(gpio_.port, gpio_.pin, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
@@ -49,7 +46,7 @@ void gpio::DigitalOutput::toggle() {
 }
 
 // *** gpio::DigitalInput ***
-gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, uint32_t flags) : gpio_(gpio) {
+gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio) {
     GPIO_InitTypeDef initStruct;
 
     if(flags & GPIO_Flags::PULLUP) {

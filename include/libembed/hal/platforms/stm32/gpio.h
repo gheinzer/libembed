@@ -45,35 +45,31 @@ namespace embed::gpio {
         uint32_t pin;
     };
 
-    struct __GPIO_Flags {
-        enum value {
-            NONE = 0,
-            PUSHPULL = 1,
-            OPENDRAIN = 2,
-            PULLUP = 4,
-            PULLDOWN = 8
-        };
-    };
+    typedef enum {
+        NO_FLAGS = 0,
+        PUSHPULL = 1,
+        OPENDRAIN = 2,
+        PULLUP = 4,
+        PULLDOWN = 8
+    } GPIO_Flags;
 
-    class DigitalOutput : public __DigitalOutput_Base {
+    class DigitalOutput : public DigitalOutput_Base {
         private:
             GPIO_Pin& gpio_;
 
         public:
-            DigitalOutput(GPIO_Pin& gpio, uint32_t flags = GPIO_Flags::NONE);
+            DigitalOutput(GPIO_Pin& gpio, GPIO_Flags flags = NO_FLAGS);
 
             void write(bool state) override;
             void toggle() override;
-            void enable() override;
-            void disable() override;
     };
 
-    class DigitalInput : public __DigitalInput_Base {
+    class DigitalInput : public DigitalInput_Base {
         private:
             GPIO_Pin& gpio_;
 
         public:
-            DigitalInput(GPIO_Pin& gpio, uint32_t flags = GPIO_Flags::NONE);
+            DigitalInput(GPIO_Pin& gpio, GPIO_Flags flags = NO_FLAGS);
 
             bool read() override;
     };
