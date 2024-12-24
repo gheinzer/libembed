@@ -1,4 +1,4 @@
-#include <libembed/util/util.hpp>
+#include <libembed/util/util.h>
 #include <libembed/hal/stm32_hal.h>
 
 using namespace embd;

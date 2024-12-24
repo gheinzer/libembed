@@ -1,4 +1,4 @@
-#include <libembed/hal/gpio.hpp>
+#include <libembed/hal/gpio.h>
 
 __GPIO_DEFINEPORTS_C;
 

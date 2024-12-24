@@ -1,4 +1,4 @@
-// #include <libembed/hal/vcp_serial.hpp>
+// #include <libembed/hal/vcp_serial.h>
 // #include <libembed/hal/stm32_hal.h>
 // #include <string.h>
 
