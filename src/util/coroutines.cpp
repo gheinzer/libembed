@@ -1,8 +1,7 @@
 #include <libembed/util/coroutines.h>
-#include <libembed/hal/vcp_serial.h>
 #include <vector>
 
-using namespace embd;
+using namespace embed;
 
 // *** Global variables ***
 static std::vector<coroutines::Context> activeContexts_ = {};

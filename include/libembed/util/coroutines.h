@@ -30,7 +30,7 @@
     __coroutine_delay_counter = HAL_GetTick() + (__delay_ms); \
     while(HAL_GetTick() < __coroutine_delay_counter) { coroutine_yield(__coroutine_context); }
 
-namespace embd::coroutines {
+namespace embed::coroutines {
     void startScheduler();
 
     struct Coroutine; // Pre-declaration of the Coroutine class
