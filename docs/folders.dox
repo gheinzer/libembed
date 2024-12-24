@@ -1,0 +1,13 @@
+/**
+@dir /include/libembed
+@brief Root include folder for all header files
+
+@dir /include/libembed/hal
+@brief Hardware abstraction layer.
+
+@dir /include/libembed/util
+@brief Various platform-independent utilities.
+
+@dir /src
+@brief Root source file folder.
+*/
