@@ -1,7 +1,7 @@
 #include <libembed/hal/platforms/stm32/gpio.h>
 #include <libembed/hal/gpio.h>
 
-#if PIOPLATFORM == ststm32
+#if LIBEMBED_PLATFORM == ststm32
 
 using namespace embed;
 
@@ -66,4 +66,4 @@ gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio)
 
 bool gpio::DigitalInput::read() { return HAL_GPIO_ReadPin(gpio_.port, gpio_.pin) == GPIO_PIN_SET; }
 
-#endif /* PIOPLATFORM == ststm32 */
+#endif /* LIBEMBED_PLATFORM == ststm32 */

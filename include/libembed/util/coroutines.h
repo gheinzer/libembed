@@ -13,62 +13,40 @@
 #define __COROUTINE_CONCAT2(a, b) __COROUTINE_CONCAT2_(a, b)
 #define __COROUTINE_YIELDLABEL __COROUTINE_CONCAT2(__yield_label, __LINE__)
 
-#define coroutine_begin(__coroutine_context) \
-    coroutine_declare(__coroutine_context, uint32_t, __coroutine_delay_counter, 0); \
-    if(__coroutine_context.__yielded_here(__FILE__, __func__)) { \
-        goto *__coroutine_context.yieldLabel; \
-    }
-    
-#define coroutine_declare(__coroutine_context, __lvar_type, __lvar_name, __lvar_initialValue) \
-    __lvar_type& __lvar_name = __coroutine_context.__getVariable<__lvar_type>(__COUNTER__, (__lvar_initialValue));
-
 #define coroutine_yield(__coroutine_context) \
-    __coroutine_context.__yield(__FILE__, __func__, &&__COROUTINE_YIELDLABEL); \
-    __COROUTINE_YIELDLABEL:
+    __coroutine_context.__yield(__FILE__, __func__); \
 
 #define coroutine_delay(__coroutine_context, __delay_ms) \
-    __coroutine_delay_counter = HAL_GetTick() + (__delay_ms); \
+    uint32_t __coroutine_delay_counter = HAL_GetTick() + (__delay_ms); \
     while(HAL_GetTick() < __coroutine_delay_counter) { coroutine_yield(__coroutine_context); }
 
+#define SCHEDULER_STACK_MARGIN 1024
+
 namespace embed::coroutines {
-    void startScheduler();
+    void enterScheduler();
+
+    uint8_t* __getStackPointer();
+    void __setStackPointer(uint8_t* sp);
 
     struct Coroutine; // Pre-declaration of the Coroutine class
 
     class Context {
         private:
-            std::map<unsigned int, std::any> contextVariables_;
-            std::string yieldFile_;
-            std::string yieldFunction_;
             void* entryPointArgument_;
             jmp_buf yieldBuf_;
             jmp_buf resumeBuf_;
+            
+            uint8_t* coroutineStackPtr_;
+
+            bool isRunning_ = false;
     
         public:
             Context(Coroutine* coroutine, void* entryPointArgument);
 
-            void* yieldLabel;
-            bool hasYielded;
-
-            bool __yielded_here(std::string file, std::string function);
-            void __yield(std::string file, std::string function, void* label);
+            void __yield();
             void __start_or_resume();
 
             Coroutine* coroutine;
-
-            template<typename T> T& __getVariable(unsigned int id) {
-                T initVal{};
-                return __getVariable<T>(id, initVal);
-            }
-
-            template<typename T> T& __getVariable(unsigned int id, T initVal) {
-                if(contextVariables_.find(id) == contextVariables_.end()) {
-                    contextVariables_[id] = initVal;
-                }
-                std::any& anyVal = contextVariables_[id];
-                T* val = std::any_cast<T>(&anyVal);
-                return *val;
-            }
     };
 
     typedef void (*CoroutineEntryPoint_t)(Context&, void*);
@@ -78,8 +56,9 @@ namespace embed::coroutines {
         public:
             const CoroutineEntryPoint_t entryPoint;
             const std::string name;
+            const size_t stackSize;
 
-            Coroutine(CoroutineEntryPoint_t entryPoint, const std::string name = "<unknown>");
+            Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, const std::string name = "<unknown>");
 
             void start(void* argument = 0);
             void stopAll();

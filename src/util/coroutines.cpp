@@ -5,11 +5,13 @@ using namespace embed;
 
 // *** Global variables ***
 static std::vector<coroutines::Context> activeContexts_ = {};
+static uint8_t* coroutineStackEndPtr_;
 
 // *** Root namespace members ***
 std::any coroutines::__dummy_variable;
 
-void coroutines::startScheduler() {
+void coroutines::enterScheduler() {
+    coroutineStackEndPtr_ = coroutines::__getStackPointer() + SCHEDULER_STACK_MARGIN;
     while(1) {
         for(int i = 0; i < activeContexts_.size(); i++) {
             activeContexts_[i].__start_or_resume();
@@ -18,7 +20,7 @@ void coroutines::startScheduler() {
 }
 
 // *** coroutines::Coroutine class ***
-coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, const std::string name) : entryPoint(entryPoint), name(name) {}
+coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize) {}
 
 void coroutines::Coroutine::start(void* argument) {
     Context ctxt(this, argument);
@@ -34,27 +36,27 @@ void coroutines::Coroutine::stopAll() {
 }
 
 // *** coroutines::Context  class***
-coroutines::Context::Context(Coroutine* coroutine, void* entryPointArgument) : coroutine(coroutine) {
-    entryPointArgument_ = entryPointArgument;
-    hasYielded = false;
-}
+coroutines::Context::Context(Coroutine* coroutine, void* entryPointArgument) : coroutine(coroutine), entryPointArgument_(entryPointArgument) {}
 
-bool coroutines::Context::__yielded_here(std::string file, std::string function) {
-    return yieldFile_ == file && yieldFunction_ == function && hasYielded;
-}
-
-void coroutines::Context::__yield(std::string file, std::string function, void* label) {
-    yieldFile_ = file;
-    yieldFunction_ = function;
-    yieldLabel = label;
-    hasYielded = true;
-    
-    longjmp(yieldBuf_, 1);
+void coroutines::Context::__yield() {
+    if(setjmp(resumeBuf_)) {
+        longjmp(yieldBuf_, 1); // Jump back to the scheduler
+    }
 }
 
 void coroutines::Context::__start_or_resume() {
-    volatile int sjVal = setjmp(yieldBuf_);
-    if(sjVal == 0) {
-        coroutine->entryPoint(*this, entryPointArgument_);
+    if(setjmp(yieldBuf_)) {
+        if(!isRunning_) {
+            coroutineStackPtr_ = coroutineStackEndPtr_;
+            coroutineStackEndPtr_ += coroutine->stackSize;
+            coroutines::__setStackPointer(coroutineStackPtr_);
+            isRunning_ = true;
+            coroutine->entryPoint(*this, entryPointArgument_);
+            isRunning_ = false;
+
+            // TODO: DO SOMETHING TO STOP THE COROUTINE
+        } else {
+            longjmp(resumeBuf_, 1); // Jump into the execution
+        }
     }
 }
