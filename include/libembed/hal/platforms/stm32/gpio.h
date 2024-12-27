@@ -1,3 +1,9 @@
+/**
+ * @file gpio.h
+ * @author Gabriel Heinzer
+ * @brief GPIO definitions specific to STM32.
+ */
+
 #include "stm32_hal.h"
 #include <libembed/hal/gpio/types.h>
 
@@ -45,30 +51,74 @@ namespace embed::gpio {
         uint32_t pin;
     };
 
+    /**
+     * @brief STM32-specific list of flags for GPIO initializations.
+     * 
+     */
     typedef enum {
+        /**
+         * @brief Default value, no flags.
+         * 
+         */
         NO_FLAGS = 0,
+        /**
+         * @brief Push-pull output configuration. Only applicable for outputs.
+         */
         PUSHPULL = 1,
+        /**
+         * @brief Open-drain output configuration. Only applicable for outputs.
+         */
         OPENDRAIN = 2,
+        /**
+         * @brief Pull-up input configuration. Only applicable for inputs.
+         */
         PULLUP = 4,
+        /**
+         * @brief Pull-down input configuration. Only applicable for inputs.
+         */
         PULLDOWN = 8
     } GPIO_Flags;
 
+    /**
+     * @brief STM32-specific implementation of a digital output.
+     * 
+     */
     class DigitalOutput : public DigitalOutput_Base {
         private:
             GPIO_Pin& gpio_;
 
         public:
+            /**
+             * @brief Construct a new DigitalOutput object from the given GPIO pin.
+             * 
+             * @param gpio The GPIO pin the digital output references.
+             * @param flags Flags for additional configuration.
+             * 
+             * @warning Use @p flags with caution as it is platform-specific.
+             */
             DigitalOutput(GPIO_Pin& gpio, GPIO_Flags flags = NO_FLAGS);
 
             void write(bool state) override;
             void toggle() override;
     };
 
+    /**
+     * @brief STM32-specific implementation of a digital input.
+     * 
+     */
     class DigitalInput : public DigitalInput_Base {
         private:
             GPIO_Pin& gpio_;
 
         public:
+            /**
+             * @brief Construct a new DigitalInput object from the given GPIO pin.
+             * 
+             * @param gpio The GPIO pin the digital input references.
+             * @param flags Flags for additional configuration.
+             * 
+             * @warning Use @p flags with caution as it is platform-specific.
+             */
             DigitalInput(GPIO_Pin& gpio, GPIO_Flags flags = NO_FLAGS);
 
             bool read() override;

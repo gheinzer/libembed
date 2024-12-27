@@ -1,3 +1,9 @@
+/**
+ * @file stack_ptr.cpp
+ * @author Gabriel Heinzer
+ * @brief Stack-pointer specific implementations for ARM.
+ */
+
 #include <libembed/util/coroutines.h>
 
 #ifdef __ARM_ARCH

@@ -7,14 +7,13 @@ using namespace embed;
 
 __GPIO_DEFINEPORTS_C;
 
-void gpio::init() {
+void __enable_clocks() {
     __FORALLPORTS_PS(__HAL_RCC_GPIO, _CLK_ENABLE());
 }
 
 // *** gpio::DigitalOutput ***
-gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio) {
-    gpio::init();
-
+gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, GPIO_Flags flags) : DigitalOutput_Base(), gpio_(gpio) {
+    __enable_clocks();
     GPIO_InitTypeDef initStruct;
 
     if(flags & GPIO_Flags::PULLUP) {
@@ -46,7 +45,8 @@ void gpio::DigitalOutput::toggle() {
 }
 
 // *** gpio::DigitalInput ***
-gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio) {
+gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : DigitalInput_Base(), gpio_(gpio) {
+    __enable_clocks();
     GPIO_InitTypeDef initStruct;
 
     if(flags & GPIO_Flags::PULLUP) {

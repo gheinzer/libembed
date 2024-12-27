@@ -3,10 +3,13 @@
 
 using namespace embed;
 
+#define NO_COROUTINE SIZE_MAX
+#define SCHEDULER_STACK_MARGIN 256
+
 // *** Global variables ***
 static std::vector<coroutines::Coroutine*> activeCoroutines_ = {};
 static uint8_t* coroutineStackEndPtr_;
-static size_t currentContext_ = 0;
+static size_t currentContext_ = NO_COROUTINE;
 
 static void __initStackPointer() {
     coroutineStackEndPtr_ = coroutines::__addStackPointer(coroutines::__getStackPointer(), SCHEDULER_STACK_MARGIN);
@@ -22,13 +25,12 @@ void coroutines::enterScheduler() {
 }
 
 void coroutines::__yield() {
-    activeCoroutines_[currentContext_]->__yield();
+    if(currentContext_ != NO_COROUTINE)
+        activeCoroutines_[currentContext_]->__yield();
 }
 
 // *** coroutines::Coroutine class ***
-coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {
-    __initStackPointer();
-}
+coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {}
 
 void coroutines::Coroutine::start() {
     if(!isRunning)
