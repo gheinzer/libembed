@@ -1,3 +1,9 @@
+/**
+ * @file gpio.h
+ * @author Gabriel Heinzer
+ * @brief STM32F4xx-specific GPIO definitions.
+ */
+
 #include <libembed/util/macros.h>
 
 #define __FORALLPORTS_PS(prefix, suffix) \

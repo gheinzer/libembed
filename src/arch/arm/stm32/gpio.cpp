@@ -1,20 +1,19 @@
 #include <libembed/hal/platforms/stm32/gpio.h>
 #include <libembed/hal/gpio.h>
 
-#if PIOPLATFORM == ststm32
+#if LIBEMBED_PLATFORM == ststm32
 
 using namespace embed;
 
 __GPIO_DEFINEPORTS_C;
 
-void gpio::init() {
+void __enable_clocks() {
     __FORALLPORTS_PS(__HAL_RCC_GPIO, _CLK_ENABLE());
 }
 
 // *** gpio::DigitalOutput ***
-gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio) {
-    gpio::init();
-
+gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, GPIO_Flags flags) : DigitalOutput_Base(), gpio_(gpio) {
+    __enable_clocks();
     GPIO_InitTypeDef initStruct;
 
     if(flags & GPIO_Flags::PULLUP) {
@@ -46,7 +45,8 @@ void gpio::DigitalOutput::toggle() {
 }
 
 // *** gpio::DigitalInput ***
-gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio) {
+gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : DigitalInput_Base(), gpio_(gpio) {
+    __enable_clocks();
     GPIO_InitTypeDef initStruct;
 
     if(flags & GPIO_Flags::PULLUP) {
@@ -66,4 +66,4 @@ gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : gpio_(gpio)
 
 bool gpio::DigitalInput::read() { return HAL_GPIO_ReadPin(gpio_.port, gpio_.pin) == GPIO_PIN_SET; }
 
-#endif /* PIOPLATFORM == ststm32 */
+#endif /* LIBEMBED_PLATFORM == ststm32 */

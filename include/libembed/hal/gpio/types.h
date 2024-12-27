@@ -1,16 +1,18 @@
 /**
  * @file types.h
  * @author Gabriel Heinzer
- * @brief Internal type definitions for 
+ * @brief Internal type definitions for @ref libembed/hal/gpio.h.
  */
 #include <stdint.h>
 
 #ifndef LIBEMBED_HAL_GPIO_HPP_
 #define LIBEMBED_HAL_GPIO_HPP_
 
+/**
+ * @brief Classes for easily interfacing with general-purpose inputs and outputs.
+ * 
+ */
 namespace embed::gpio {
-    void init();
-
     /**
      * @brief Opaque data structure defining a hardware pin.
      */
@@ -19,7 +21,7 @@ namespace embed::gpio {
     /**
      * @brief Base class for digital output pins.
      * Do not use this class directly. Use the 
-     * platform-specific @ref DigitalOutput instead.
+     * platform-specific `DigitalOutput` class instead.
      */
     class DigitalOutput_Base {
         public:
@@ -49,10 +51,10 @@ namespace embed::gpio {
     /**
      * @brief Base class for digital input pins.
      * Do not use this class directly. Use the 
-     * platform-specific @ref DigitalInput instead.
+     * platform-specific `DigitalInput` class instead.
      */
     class DigitalInput_Base {
-        public:
+        public:          
             /**
              * @brief Reads the value from the input and returns it as a boolean.
              * 

@@ -3,58 +3,68 @@
 
 using namespace embed;
 
+#define NO_COROUTINE SIZE_MAX
+#define SCHEDULER_STACK_MARGIN 256
+
 // *** Global variables ***
-static std::vector<coroutines::Context> activeContexts_ = {};
+static std::vector<coroutines::Coroutine*> activeCoroutines_ = {};
+static uint8_t* coroutineStackEndPtr_;
+static size_t currentContext_ = NO_COROUTINE;
 
-// *** Root namespace members ***
-std::any coroutines::__dummy_variable;
+static void __initStackPointer() {
+    coroutineStackEndPtr_ = coroutines::__addStackPointer(coroutines::__getStackPointer(), SCHEDULER_STACK_MARGIN);
+}
 
-void coroutines::startScheduler() {
+void coroutines::enterScheduler() {
+    __initStackPointer();
     while(1) {
-        for(int i = 0; i < activeContexts_.size(); i++) {
-            activeContexts_[i].__start_or_resume();
+        for(currentContext_ = 0; currentContext_ < activeCoroutines_.size(); currentContext_++) {
+            activeCoroutines_[currentContext_]->__start_or_resume();
         }
     }
+}
+
+void coroutines::__yield() {
+    if(currentContext_ != NO_COROUTINE)
+        activeCoroutines_[currentContext_]->__yield();
 }
 
 // *** coroutines::Coroutine class ***
-coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, const std::string name) : entryPoint(entryPoint), name(name) {}
+coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {}
 
-void coroutines::Coroutine::start(void* argument) {
-    Context ctxt(this, argument);
-    activeContexts_.push_back(ctxt);
+void coroutines::Coroutine::start() {
+    if(!isRunning)
+        activeCoroutines_.push_back(this);
 }
 
-void coroutines::Coroutine::stopAll() {
-    for(int i = 0; i < activeContexts_.size(); i++) {
-        if(activeContexts_.at(i).coroutine == this) {
-            activeContexts_.erase(activeContexts_.begin() + i);
+void coroutines::Coroutine::stop() {
+    for(int i = 0; i < activeCoroutines_.size(); i++) {
+        if(activeCoroutines_.at(i) == this) {
+            activeCoroutines_.erase(activeCoroutines_.begin() + i);
         }
+    }
+    isRunning = false;
+}
+
+void coroutines::Coroutine::__yield() {
+    if(!setjmp(resumeBuf_)) {
+        longjmp(yieldBuf_, 1); // Jump back to the scheduler
     }
 }
 
-// *** coroutines::Context  class***
-coroutines::Context::Context(Coroutine* coroutine, void* entryPointArgument) : coroutine(coroutine) {
-    entryPointArgument_ = entryPointArgument;
-    hasYielded = false;
-}
+void coroutines::Coroutine::__start_or_resume() {
+    if(!stackAllocated_) {
+        coroutineStackPtr_ = coroutineStackEndPtr_;
+        coroutineStackEndPtr_ = __addStackPointer(coroutineStackEndPtr_, stackSize);
+        stackAllocated_ = true;
+    }
 
-bool coroutines::Context::__yielded_here(std::string file, std::string function) {
-    return yieldFile_ == file && yieldFunction_ == function && hasYielded;
-}
-
-void coroutines::Context::__yield(std::string file, std::string function, void* label) {
-    yieldFile_ = file;
-    yieldFunction_ = function;
-    yieldLabel = label;
-    hasYielded = true;
-    
-    longjmp(yieldBuf_, 1);
-}
-
-void coroutines::Context::__start_or_resume() {
-    volatile int sjVal = setjmp(yieldBuf_);
-    if(sjVal == 0) {
-        coroutine->entryPoint(*this, entryPointArgument_);
+    if(!setjmp(yieldBuf_)) {
+        if(!isRunning) {
+            isRunning = true;
+            runFromEntryPoint_();
+        } else {
+            longjmp(resumeBuf_, 1); // Jump into the execution
+        }
     }
 }

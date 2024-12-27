@@ -1,3 +1,9 @@
+/**
+ * @file gpio.h
+ * @author Gabriel Heinzer
+ * @brief STM32G0xx-specific GPIO definitions.
+ */
+
 #define __FORALLPORTS_PS(prefix, suffix) \
     LIBEMBED_CONCAT3(prefix, A, suffix); \
     LIBEMBED_CONCAT3(prefix, B, suffix); \
