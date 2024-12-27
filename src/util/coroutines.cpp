@@ -4,57 +4,53 @@
 using namespace embed;
 
 // *** Global variables ***
-static std::vector<coroutines::Context> activeContexts_ = {};
+static std::vector<coroutines::Coroutine*> activeCoroutines_ = {};
 static uint8_t* coroutineStackEndPtr_;
-
-// *** Root namespace members ***
-std::any coroutines::__dummy_variable;
+static size_t currentContext_ = 0;
 
 void coroutines::enterScheduler() {
-    coroutineStackEndPtr_ = coroutines::__getStackPointer() + SCHEDULER_STACK_MARGIN;
+    coroutineStackEndPtr_ = __addStackPointer(__getStackPointer(), SCHEDULER_STACK_MARGIN);
     while(1) {
-        for(int i = 0; i < activeContexts_.size(); i++) {
-            activeContexts_[i].__start_or_resume();
+        for(currentContext_ = 0; currentContext_ < activeCoroutines_.size(); currentContext_++) {
+            activeCoroutines_[currentContext_]->__start_or_resume();
         }
     }
+}
+
+void coroutines::__yield() {
+    activeCoroutines_[currentContext_]->__yield();
 }
 
 // *** coroutines::Coroutine class ***
-coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize) {}
+coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {}
 
-void coroutines::Coroutine::start(void* argument) {
-    Context ctxt(this, argument);
-    activeContexts_.push_back(ctxt);
+void coroutines::Coroutine::start() {
+    if(!isRunning)
+        activeCoroutines_.push_back(this);
 }
 
-void coroutines::Coroutine::stopAll() {
-    for(int i = 0; i < activeContexts_.size(); i++) {
-        if(activeContexts_.at(i).coroutine == this) {
-            activeContexts_.erase(activeContexts_.begin() + i);
+void coroutines::Coroutine::stop() {
+    for(int i = 0; i < activeCoroutines_.size(); i++) {
+        if(activeCoroutines_.at(i) == this) {
+            activeCoroutines_.erase(activeCoroutines_.begin() + i);
         }
     }
+    isRunning = false;
 }
 
-// *** coroutines::Context  class***
-coroutines::Context::Context(Coroutine* coroutine, void* entryPointArgument) : coroutine(coroutine), entryPointArgument_(entryPointArgument) {}
-
-void coroutines::Context::__yield() {
-    if(setjmp(resumeBuf_)) {
+void coroutines::Coroutine::__yield() {
+    if(!setjmp(resumeBuf_)) {
         longjmp(yieldBuf_, 1); // Jump back to the scheduler
     }
 }
 
-void coroutines::Context::__start_or_resume() {
-    if(setjmp(yieldBuf_)) {
-        if(!isRunning_) {
+void coroutines::Coroutine::__start_or_resume() {
+    if(!setjmp(yieldBuf_)) {
+        if(!isRunning) {
             coroutineStackPtr_ = coroutineStackEndPtr_;
-            coroutineStackEndPtr_ += coroutine->stackSize;
-            coroutines::__setStackPointer(coroutineStackPtr_);
-            isRunning_ = true;
-            coroutine->entryPoint(*this, entryPointArgument_);
-            isRunning_ = false;
-
-            // TODO: DO SOMETHING TO STOP THE COROUTINE
+            coroutineStackEndPtr_ = __addStackPointer(coroutineStackEndPtr_, stackSize);
+            isRunning = true;
+            runFromEntryPoint_();
         } else {
             longjmp(resumeBuf_, 1); // Jump into the execution
         }

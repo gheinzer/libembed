@@ -7,8 +7,21 @@ uint8_t* embed::coroutines::__getStackPointer() {
     asm("mov %[stackptr],sp" : [stackptr] "=r" (sp));
     return sp;
 }
-void embed::coroutines::__setStackPointer(uint8_t* sp) {
-    asm("mov sp,%[stackptr]" :: [stackptr] "r" (sp));
+
+uint8_t* embed::coroutines::__addStackPointer(uint8_t* sp, size_t offset) { return sp - offset; }
+
+void embed::coroutines::Coroutine::runFromEntryPoint_() {
+    // Set the stack pointer for the coroutine context
+    asm(
+        R"(
+            mov sp,%[stackptr]
+        )" :: [stackptr] "r" (coroutineStackPtr_)
+    );
+
+    // Call the coroutine entry point
+    this->entryPoint(*this, this->entryPointArgument);
+    this->stop();
+    longjmp(yieldBuf_, 1);
 }
 
 #endif
