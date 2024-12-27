@@ -8,8 +8,12 @@ static std::vector<coroutines::Coroutine*> activeCoroutines_ = {};
 static uint8_t* coroutineStackEndPtr_;
 static size_t currentContext_ = 0;
 
+static void __initStackPointer() {
+    coroutineStackEndPtr_ = coroutines::__addStackPointer(coroutines::__getStackPointer(), SCHEDULER_STACK_MARGIN);
+}
+
 void coroutines::enterScheduler() {
-    coroutineStackEndPtr_ = __addStackPointer(__getStackPointer(), SCHEDULER_STACK_MARGIN);
+    __initStackPointer();
     while(1) {
         for(currentContext_ = 0; currentContext_ < activeCoroutines_.size(); currentContext_++) {
             activeCoroutines_[currentContext_]->__start_or_resume();
@@ -22,7 +26,9 @@ void coroutines::__yield() {
 }
 
 // *** coroutines::Coroutine class ***
-coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {}
+coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {
+    __initStackPointer();
+}
 
 void coroutines::Coroutine::start() {
     if(!isRunning)
@@ -45,10 +51,14 @@ void coroutines::Coroutine::__yield() {
 }
 
 void coroutines::Coroutine::__start_or_resume() {
+    if(!stackAllocated_) {
+        coroutineStackPtr_ = coroutineStackEndPtr_;
+        coroutineStackEndPtr_ = __addStackPointer(coroutineStackEndPtr_, stackSize);
+        stackAllocated_ = true;
+    }
+
     if(!setjmp(yieldBuf_)) {
         if(!isRunning) {
-            coroutineStackPtr_ = coroutineStackEndPtr_;
-            coroutineStackEndPtr_ = __addStackPointer(coroutineStackEndPtr_, stackSize);
             isRunning = true;
             runFromEntryPoint_();
         } else {

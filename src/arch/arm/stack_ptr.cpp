@@ -21,7 +21,7 @@ void embed::coroutines::Coroutine::runFromEntryPoint_() {
     // Call the coroutine entry point
     this->entryPoint(*this, this->entryPointArgument);
     this->stop();
-    longjmp(yieldBuf_, 1);
+    this->__yield();
 }
 
 #endif

@@ -28,9 +28,10 @@ namespace embed::coroutines {
         private:
             jmp_buf yieldBuf_;
             jmp_buf resumeBuf_;
-            jmp_buf stopBuf_;
             
             uint8_t* coroutineStackPtr_;
+
+            bool stackAllocated_ = false;
 
             void runFromEntryPoint_();
 
