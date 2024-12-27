@@ -16,7 +16,7 @@ jobs:
         run: ls -al -r docs
           
       - name: Doxygen Action
-        uses: mattnotmitt/doxygen-action@1.10.0
+        uses: mattnotmitt/doxygen-action@edge
         with:
           working-directory: './docs'
           
