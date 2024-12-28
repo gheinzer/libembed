@@ -7,4 +7,7 @@
 
 @dir /include/libembed/util
 @brief Various platform-independent utilities.
+
+@dir /include/libembed/arch
+@brief Platform-dependent definitions.
 */

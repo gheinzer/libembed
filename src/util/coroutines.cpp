@@ -33,8 +33,10 @@ void coroutines::__yield() {
 coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {}
 
 void coroutines::Coroutine::start() {
-    if(!isRunning)
+    if(!isRunning) {
         activeCoroutines_.push_back(this);
+        isRunning = true;
+    }
 }
 
 void coroutines::Coroutine::stop() {
@@ -44,6 +46,7 @@ void coroutines::Coroutine::stop() {
         }
     }
     isRunning = false;
+    wasCalled_ = false;
 }
 
 void coroutines::Coroutine::__yield() {
@@ -60,11 +63,15 @@ void coroutines::Coroutine::__start_or_resume() {
     }
 
     if(!setjmp(yieldBuf_)) {
-        if(!isRunning) {
-            isRunning = true;
+        if(!wasCalled_) {
+            wasCalled_ = true;
             runFromEntryPoint_();
         } else {
             longjmp(resumeBuf_, 1); // Jump into the execution
         }
     }
+}
+
+void coroutines::Coroutine::join() {
+    while(isRunning) yield;
 }

@@ -102,6 +102,11 @@ namespace embed::coroutines {
             bool stackAllocated_ = false;
 
             /**
+             * @brief Specifies if the entry point has been called yet.
+             */
+            bool wasCalled_ = false;
+
+            /**
              * @brief Runs the coroutine from the specified coroutine with
              * the calculated stack pointer. This is architecture-specific
              * as it involves assembly calls.
@@ -167,6 +172,11 @@ namespace embed::coroutines {
              * continue it's execution until yielding or returning.
              */
             void stop();
+
+            /**
+             * @brief Blocks the calling coroutine until the target coroutine has returned.
+             */
+            void join();
     };
 }
 
