@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <map>
 #include <any>
+#include <stdint.h>
 
 #ifndef COROUTINES_HPP_
 #define COROUTINES_HPP_

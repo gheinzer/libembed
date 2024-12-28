@@ -1,9 +1,14 @@
-#include <libembed/hal/platforms/stm32/gpio.h>
-#include <libembed/hal/gpio.h>
+#include <libembed/arch/arm/stm32/gpio.h>
+#include <libembed/hal/gpio/types.h>
 
 #if LIBEMBED_PLATFORM == ststm32
 
-using namespace embed;
+using namespace embed::arch::arm::stm32;
+
+struct embed::gpio::__GPIO_Pin {
+    GPIO_TypeDef* port;
+    uint32_t pin;
+};
 
 __GPIO_DEFINEPORTS_C;
 

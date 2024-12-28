@@ -11,7 +11,7 @@
 #define LIBEMBED_STM32_GPIO_H_
 
 #define __GPIO_DEFINEPIN_H(port, pin) extern GPIO_Pin P##port##pin;
-#define __GPIO_DEFINEPIN_C(_port, _pin) embed::gpio::GPIO_Pin embed::gpio::P##_port##_pin = { .port = GPIO##_port, .pin = GPIO_PIN_##_pin };
+#define __GPIO_DEFINEPIN_C(_port, _pin) embed::arch::arm::stm32::gpio::GPIO_Pin embed::arch::arm::stm32::gpio::P##_port##_pin = { .port = GPIO##_port, .pin = GPIO_PIN_##_pin };
 
 #define __GPIO_DEFINEPORT_H(port) __FORALLPINS_FPORT(__GPIO_DEFINEPIN_H, port)
 #define __GPIO_DEFINEPORT_C(port) __FORALLPINS_FPORT(__GPIO_DEFINEPIN_C, port)
@@ -45,11 +45,9 @@
     #include "stm32f4/gpio.h"
 #endif
 
-namespace embed::gpio {
-    struct __GPIO_Pin {
-        GPIO_TypeDef* port;
-        uint32_t pin;
-    };
+//! STM32-specific GPIO declarations
+namespace embed::arch::arm::stm32::gpio {
+    using namespace embed::gpio;
 
     /**
      * @brief STM32-specific list of flags for GPIO initializations.
