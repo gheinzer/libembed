@@ -4,3 +4,4 @@ src/main.c*
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 docs/output
+include/libembed_config.h

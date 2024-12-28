@@ -10,9 +10,12 @@
 #include <map>
 #include <any>
 #include <stdint.h>
+#include <libembed/config.h>
 
 #ifndef COROUTINES_HPP_
 #define COROUTINES_HPP_
+
+#if LIBEMBED_CONFIG_ENABLE_COROUTINES == true
 
 /**
  * @brief Yield the current coroutine. This can also be used in child functions.
@@ -167,5 +170,10 @@ namespace embed::coroutines {
     };
 }
 
+#else
+
+#define yield
+
+#endif /* LIBEMBED_ENABLE_COROUTINES == true */
 
 #endif /* COROUTINES_HPP_ */

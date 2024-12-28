@@ -7,7 +7,4 @@
 
 @dir /include/libembed/util
 @brief Various platform-independent utilities.
-
-@dir /src
-@brief Root source file folder.
 */
