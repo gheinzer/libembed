@@ -1,12 +1,12 @@
 /**
  * @file types.h
  * @author Gabriel Heinzer
- * @brief Internal type definitions for @ref libembed/hal/gpio.h.
+ * @brief Type definitions for @ref libembed/hal/gpio.h.
  */
 #include <stdint.h>
 
-#ifndef LIBEMBED_HAL_GPIO_HPP_
-#define LIBEMBED_HAL_GPIO_HPP_
+#ifndef LIBEMBED_HAL_GPIO_TYPES_H_
+#define LIBEMBED_HAL_GPIO_TYPES_H_
 
 /**
  * @brief Classes for easily interfacing with general-purpose inputs and outputs.
@@ -64,4 +64,4 @@ namespace embed::gpio {
     };
 }
 
-#endif /* LIBEMBED_HAL_GPIO_HPP_ */
+#endif /* LIBEMBED_HAL_GPIO_TYPES_H_ */
