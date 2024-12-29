@@ -16,12 +16,12 @@ uint8_t* embed::coroutines::__getStackPointer() {
 
 uint8_t* embed::coroutines::__addStackPointer(uint8_t* sp, size_t offset) { return sp - offset; }
 
-void embed::coroutines::Coroutine::runFromEntryPoint_() {
+void embed::coroutines::Coroutine_Base::runFromEntryPoint_() {
     // Set the stack pointer for the coroutine context
     asm(
         R"(
             mov sp,%[stackptr]
-        )" :: [stackptr] "r" (coroutineStackPtr_)
+        )" :: [stackptr] "r" (stackAllocatorPtr_->stackEnd)
     );
 
     // Call the coroutine entry point

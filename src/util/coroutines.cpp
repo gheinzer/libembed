@@ -7,7 +7,7 @@ using namespace embed;
 #define SCHEDULER_STACK_MARGIN 256
 
 // *** Global variables ***
-static std::vector<coroutines::Coroutine*> activeCoroutines_ = {};
+static std::vector<coroutines::Coroutine_Base*> activeCoroutines_ = {};
 static uint8_t* coroutineStackEndPtr_;
 static size_t currentContext_ = NO_COROUTINE;
 
@@ -29,17 +29,18 @@ void coroutines::__yield() {
         activeCoroutines_[currentContext_]->__yield();
 }
 
-// *** coroutines::Coroutine class ***
-coroutines::Coroutine::Coroutine(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {}
+// *** coroutines::Coroutine_Base class ***
+coroutines::Coroutine_Base::Coroutine_Base(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {
+}
 
-void coroutines::Coroutine::start() {
+void coroutines::Coroutine_Base::start() {
     if(!isRunning) {
         activeCoroutines_.push_back(this);
         isRunning = true;
     }
 }
 
-void coroutines::Coroutine::stop() {
+void coroutines::Coroutine_Base::stop() {
     for(int i = 0; i < activeCoroutines_.size(); i++) {
         if(activeCoroutines_.at(i) == this) {
             activeCoroutines_.erase(activeCoroutines_.begin() + i);
@@ -49,19 +50,13 @@ void coroutines::Coroutine::stop() {
     wasCalled_ = false;
 }
 
-void coroutines::Coroutine::__yield() {
+void coroutines::Coroutine_Base::__yield() {
     if(!setjmp(resumeBuf_)) {
         longjmp(yieldBuf_, 1); // Jump back to the scheduler
     }
 }
 
-void coroutines::Coroutine::__start_or_resume() {
-    if(!stackAllocated_) {
-        coroutineStackPtr_ = coroutineStackEndPtr_;
-        coroutineStackEndPtr_ = __addStackPointer(coroutineStackEndPtr_, stackSize);
-        stackAllocated_ = true;
-    }
-
+void coroutines::Coroutine_Base::__start_or_resume() {
     if(!setjmp(yieldBuf_)) {
         if(!wasCalled_) {
             wasCalled_ = true;
@@ -72,6 +67,6 @@ void coroutines::Coroutine::__start_or_resume() {
     }
 }
 
-void coroutines::Coroutine::join() {
+void coroutines::Coroutine_Base::join() {
     while(isRunning) yield;
 }

@@ -37,12 +37,15 @@
     function(port, 14); \
     function(port, 15);
 
-#ifdef STM32G0
+#if defined(STM32G0)
     #include "stm32g0/gpio.h"
-#endif
-
-#ifdef STM32F4
+#elif defined(STM32F4)
     #include "stm32f4/gpio.h"
+#elif defined(__DOXYGEN__)
+    // Use the STM32F4 as an example device for Doxygen
+    #include "stm32f4/gpio.h"
+#else
+    #error Unsupported device. Please refer to the documentation for a list of supported devices.
 #endif
 
 //! STM32-specific GPIO declarations
