@@ -18,7 +18,7 @@
     #if __has_include(<libembed_config.h>)
         #include <libembed_config.h>
     #else
-        #warning You don't have a configuration file for libembed. It is recommended to create a libembed_config.h file for configuration.
+        #warning You do not seem to have a configuration file for libembed. It is recommended to create a libembed_config.h file for configuration.
     #endif
 
     #ifndef LIBEMBED_CONFIG_ENABLE_COROUTINES
