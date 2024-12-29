@@ -1,0 +1,11 @@
+/**
+@mainpage libembed API documentation
+`libembed` is a library including various utilities, HALs, BSPs and drivers.
+It is supposed to provide a user-friendly, standardized interface for easy use with C++ and PlatformIO.
+
+Note that this library may not always be ideal from a performance or memory standpoint; it is mainly designed for quick installation and usage. I'm happy to hear your about the possible improvements with this
+library.
+
+Refer to the following tutorials to get started:
+- @subpage tutorials/coroutines
+*/

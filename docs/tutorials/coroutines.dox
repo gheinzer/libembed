@@ -1,0 +1,46 @@
+/**
+@page tutorials/coroutines Getting started with Coroutines
+This library implements coroutines, a way to simulate parallel execution of multiple functions. This is done using a round-robin scheduler,
+`setjmp`, `longjmp` and some architecture-specific assembly code.
+
+@section coroutine-config Configuration
+To be able to use the coroutine functionality, you must enable @ref LIBEMBED_CONFIG_ENABLE_COROUTINES in your @ref configuration-file
+@code{.h}
+// libembed_config.h
+#define LIBEMBED_CONFIG_ENABLE_COROUTINES true
+@endcode
+
+You can now use the @ref libembed/util/coroutines.h header:
+@code{.h}
+#import <libembed/util/coroutine.h>
+@endcode
+
+@section declaring-a-coroutine Declaring a coroutine
+Coroutines are represented by the @ref embed::coroutines::Coroutine object. Each coroutine has an entry point function, which is called upon entry of a coroutine.
+
+In addition to that, each coroutine has it's individual stack memory which stores all local variables of the entry point and any
+subsequent calls. You can also pass an argument to the entry point of the coroutine, allowing you to use an entry point for multiple
+different functions (e.g. blinking two LEDs in different intervals by passing these parameters).
+
+@code{.cpp}
+// Entry point declaration to the coroutine
+void blinker(embed::coroutines::Coroutine& coroutine, std::any interval);
+
+// Declare a coroutine with stack size 256 and 100 as the argument
+embed::coroutines::Coroutine<256> blinkCoroutine(blinker, 100);
+@endcode
+
+After you have defined a coroutine, you have to start it, if you want it to do anything. You can do this
+by calling @ref embed::coroutines::Coroutine::start.
+
+@code{.cpp}
+blinkCoroutine.start();
+@endcode
+
+After you have initialized everything you need to initialize, you have to pass control to the coroutine scheduler by calling
+@ref embed::coroutines::enterScheduler. **This function will not return, i.e. you have to continue your program in one of the
+coroutines.**
+
+This is a complete example code for blinking two LEDs using coroutines:
+@include coroutine-blink/main.cpp
+*/

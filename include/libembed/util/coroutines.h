@@ -2,6 +2,8 @@
  * @file coroutines.h
  * @author Gabriel Heinzer
  * @brief C++ coroutine implementation allowing for coroutine-specific stack memory.
+ * 
+ * @example coroutine-blink/main.cpp
  */
 
 #include <setjmp.h>
@@ -68,8 +70,7 @@
         struct Coroutine_Base;
 
         /**
-         * @brief Entry point function to a coroutine. This takes
-         * two arguments:
+         * @brief A coroutine entry point takes two arguments:
          *  - The @ref Coroutine_Base object (by reference) of the parent coroutine
          *  - The argument passed to the constructor of the @ref Coroutine_Base as `std::any`
          */

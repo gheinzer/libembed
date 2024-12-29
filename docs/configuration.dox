@@ -1,0 +1,16 @@
+/**
+@page configuration-file Configuration file
+
+`libembed` can be configured using a configuration file named `libembed_config.h`. This file has to be located
+in the include path if you want to use it (i.e. has to be includeable using `#include <libembed_config.h>`).
+
+If no configuration file is present, the default values are used. You can also a configuration key, which causes the default value to be
+used.
+
+Example of a `libembed_config.h`:
+@include libembed_config.h
+
+The configuration keys use preprocessor macros. They all start with `LIBEMBED_CONFIG_`.
+
+You can find a list of configuration values as well as their default values in the documentation of @ref libembed/config.h.
+*/
