@@ -10,8 +10,8 @@ void clock::init() {
     HAL_Init();
 }
 
-void clock::delay(int milliseconds) {
-    int endTick = HAL_GetTick() + milliseconds;
+void clock::delay(unsigned int milliseconds) {
+    unsigned int endTick = HAL_GetTick() + milliseconds;
     while(HAL_GetTick() < endTick) yield;
 }
 

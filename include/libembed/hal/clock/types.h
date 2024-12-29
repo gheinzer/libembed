@@ -25,7 +25,7 @@ namespace embed::clock {
      * 
      * @param milliseconds The number of milliseconds you want to pause the execution for.
      */
-    void delay(int milliseconds);
+    void delay(unsigned int milliseconds);
 };
 
 #endif /* LIBEMBED_HAL_CLOCK_TYPES_H_ */
