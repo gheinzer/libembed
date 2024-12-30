@@ -50,6 +50,10 @@ void gpio::DigitalOutput::toggle_specific_() {
     HAL_GPIO_TogglePin(gpio.port, gpio.pin);
 }
 
+bool gpio::DigitalOutput::read_specific_() {
+    return HAL_GPIO_ReadPin(gpio.port, gpio.pin);
+}
+
 // *** gpio::DigitalInput ***
 void gpio::DigitalInput::init_specific_() {
     __enable_clocks();

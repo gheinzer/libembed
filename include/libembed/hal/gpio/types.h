@@ -45,6 +45,13 @@ namespace embed::gpio {
             void toggle_specific_();
 
             /**
+             * @brief Platform-specific output read function.
+             * 
+             * @return The state of the output, without any inversion.
+             */
+            bool read_specific_();
+
+            /**
              * @brief Platform-specific initialization function.
              * 
              * Called automatically when constructing a DigitalOutput class instance.
@@ -122,6 +129,33 @@ namespace embed::gpio {
              * 
              */
             void disable();
+            /**
+             * @brief Reads the state from the input.
+             * 
+             * @return The current state of the output.
+             */
+            bool read();
+
+            /**
+             * @brief Operator overload for the `=` operator. Sets the state of the output.
+             * 
+             * @param state Boolean state to set the output to.
+             */
+            inline void operator =(bool state) { write(state); }
+            /**
+             * @brief Operator overload for the `^=` operator. Performs an XOR operation with
+             * the current state of the output.
+             * 
+             * @param op The input for the XOR operation.
+             */
+            inline void operator ^=(bool op) { if(op) toggle(); }
+
+            /**
+             * @brief Conversion overload for `bool`. Gets the current state of the output.
+             * 
+             * @return Returns the current state of the output.
+             */
+            inline operator bool() { return read(); }
     };
 
     /**
@@ -186,6 +220,13 @@ namespace embed::gpio {
              * @return Returns the digital value of the input as a boolean.
              */
             bool read();
+
+            /**
+             * @brief Conversion overload for `bool`. Gets the current state of the input.
+             * 
+             * @return Returns the current state of the input.
+             */
+            inline operator bool() { return read(); }
     };
 }
 
