@@ -5,8 +5,9 @@
  */
 
 #include <libembed/util/coroutines.h>
+#include <libembed/config.h>
 
-#ifdef __ARM_ARCH
+#if defined(__ARM_ARCH) && LIBEMBED_CONFIG_ENABLE_COROUTINES == true
 
 uint8_t* embed::coroutines::__getStackPointer() {
     uint8_t* sp;

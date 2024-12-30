@@ -1,5 +1,8 @@
 #include <libembed/util/coroutines.h>
+#include <libembed/config.h>
 #include <vector>
+
+#if LIBEMBED_CONFIG_ENABLE_COROUTINES == true
 
 using namespace embed;
 
@@ -70,3 +73,5 @@ void coroutines::Coroutine_Base::__start_or_resume() {
 void coroutines::Coroutine_Base::join() {
     while(isRunning) yield;
 }
+
+#endif
