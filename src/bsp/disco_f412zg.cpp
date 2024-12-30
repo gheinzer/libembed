@@ -2,16 +2,16 @@
 
 #if LIBEMBED_BOARD == disco_f412zg
 
-    embed::gpio::DigitalOutput embed::board::LD1(gpio::PE0);
-    embed::gpio::DigitalOutput embed::board::LD2(gpio::PE1);
-    embed::gpio::DigitalOutput embed::board::LD3(gpio::PE2);
-    embed::gpio::DigitalOutput embed::board::LD4(gpio::PE3);
+    embed::gpio::DigitalOutput embed::board::LD1(gpio::PE0, true);
+    embed::gpio::DigitalOutput embed::board::LD2(gpio::PE1, true);
+    embed::gpio::DigitalOutput embed::board::LD3(gpio::PE2, true);
+    embed::gpio::DigitalOutput embed::board::LD4(gpio::PE3, true);
 
-    embed::gpio::DigitalInput embed::board::JOY_SEL(gpio::PA0);
-    embed::gpio::DigitalInput embed::board::JOY_DOWN(gpio::PG1);
-    embed::gpio::DigitalInput embed::board::JOY_LEFT(gpio::PF15);
-    embed::gpio::DigitalInput embed::board::JOY_RIGHT(gpio::PF14);
-    embed::gpio::DigitalInput embed::board::JOY_UP(gpio::PG0);
+    embed::gpio::DigitalInput embed::board::JOY_SEL(gpio::PA0, false, gpio::PULLDOWN);
+    embed::gpio::DigitalInput embed::board::JOY_DOWN(gpio::PG1, false, gpio::PULLDOWN);
+    embed::gpio::DigitalInput embed::board::JOY_LEFT(gpio::PF15, false, gpio::PULLDOWN);
+    embed::gpio::DigitalInput embed::board::JOY_RIGHT(gpio::PF14, false, gpio::PULLDOWN);
+    embed::gpio::DigitalInput embed::board::JOY_UP(gpio::PG0, false, gpio::PULLDOWN);
 
     embed::gpio::DigitalOutput& embed::board::led_green = LD1;
     embed::gpio::DigitalOutput& embed::board::led_orange = LD2;

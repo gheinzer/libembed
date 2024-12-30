@@ -8,6 +8,7 @@ using namespace embed::arch::arm::stm32;
 struct embed::gpio::__GPIO_Pin {
     GPIO_TypeDef* port;
     uint32_t pin;
+    uint32_t pinNumber;
 };
 
 __GPIO_DEFINEPORTS_C;
@@ -17,58 +18,61 @@ void __enable_clocks() {
 }
 
 // *** gpio::DigitalOutput ***
-gpio::DigitalOutput::DigitalOutput(gpio::GPIO_Pin &gpio, GPIO_Flags flags) : DigitalOutput_Base(), gpio_(gpio) {
+void gpio::DigitalOutput::init_specific_() {
     __enable_clocks();
     GPIO_InitTypeDef initStruct;
 
-    if(flags & GPIO_Flags::PULLUP) {
+    if(flags & embed::arch::arm::stm32::gpio::PULLUP) {
         initStruct.Pull = GPIO_PULLUP;
-    } else if(flags & GPIO_Flags::PULLDOWN) {
+    } else if(flags & embed::arch::arm::stm32::gpio::PULLDOWN) {
         initStruct.Pull = GPIO_PULLDOWN;
     } else {
         initStruct.Pull = GPIO_NOPULL;
     }
 
-    if(flags & GPIO_Flags::OPENDRAIN) {
+    if(flags & embed::arch::arm::stm32::gpio::OPENDRAIN) {
         initStruct.Mode = GPIO_MODE_OUTPUT_OD;
     } else {
         initStruct.Mode = GPIO_MODE_OUTPUT_PP;
     }
 
-    initStruct.Pin = gpio_.pin;
+    initStruct.Pin = gpio.pin;
     initStruct.Speed = GPIO_SPEED_FAST;
     
-    HAL_GPIO_Init(gpio_.port, &initStruct);
+    HAL_GPIO_Init(gpio.port, &initStruct);
 }
 
-void gpio::DigitalOutput::write(bool state) {
-    HAL_GPIO_WritePin(gpio_.port, gpio_.pin, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
+void gpio::DigitalOutput::write_specific_(bool state) {
+    HAL_GPIO_WritePin(gpio.port, gpio.pin, state ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
-void gpio::DigitalOutput::toggle() {
-    HAL_GPIO_TogglePin(gpio_.port, gpio_.pin);
+void gpio::DigitalOutput::toggle_specific_() {
+    HAL_GPIO_TogglePin(gpio.port, gpio.pin);
 }
 
 // *** gpio::DigitalInput ***
-gpio::DigitalInput::DigitalInput(GPIO_Pin &gpio, GPIO_Flags flags) : DigitalInput_Base(), gpio_(gpio) {
+void gpio::DigitalInput::init_specific_() {
     __enable_clocks();
     GPIO_InitTypeDef initStruct;
 
-    if(flags & GPIO_Flags::PULLUP) {
+    if(flags & embed::arch::arm::stm32::gpio::PULLUP) {
         initStruct.Pull = GPIO_PULLUP;
-    } else if(flags & GPIO_Flags::PULLDOWN) {
+    } else if(flags & embed::arch::arm::stm32::gpio::PULLDOWN) {
         initStruct.Pull = GPIO_PULLDOWN;
     } else {
         initStruct.Pull = GPIO_NOPULL;
     }
 
-    initStruct.Pin = gpio_.pin;
+    initStruct.Pin = gpio.pin;
     initStruct.Speed = GPIO_SPEED_FAST;
     initStruct.Mode = GPIO_MODE_INPUT;
     
-    HAL_GPIO_Init(gpio_.port, &initStruct);
+    HAL_GPIO_Init(gpio.port, &initStruct);
 }
 
-bool gpio::DigitalInput::read() { return HAL_GPIO_ReadPin(gpio_.port, gpio_.pin) == GPIO_PIN_SET; }
+bool gpio::DigitalInput::read_specific_() { 
+    GPIO_PinState state = HAL_GPIO_ReadPin(gpio.port, gpio.pinNumber);
+    return state == GPIO_PIN_SET;
+}
 
 #endif /* LIBEMBED_PLATFORM == ststm32 */

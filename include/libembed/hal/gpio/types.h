@@ -18,49 +18,174 @@ namespace embed::gpio {
      */
     typedef struct __GPIO_Pin GPIO_Pin;
 
+    //! Platform-specific GPIO flags
+    typedef const uint32_t GPIO_Flag;
+
+    //! Placeholder value for no flags
+    GPIO_Flag NO_FLAGS = 0;
+
     /**
-     * @brief Base class for digital output pins.
-     * Do not use this class directly. Use the 
-     * platform-specific `DigitalOutput` class instead.
+     * @brief Represents a digital output pin.
      */
-    class DigitalOutput_Base {
+    class DigitalOutput {
+        private:
+            /**
+             * @brief Platform-specific output set function.
+             * 
+             * This does not need to take inversion of the output into account.
+             * 
+             * @param state The state the output should be set to, without any inversion.
+             */
+            void write_specific_(bool state);
+
+            /**
+             * @brief Platform-specific output toggle function.
+             * 
+             */
+            void toggle_specific_();
+
+            /**
+             * @brief Platform-specific initialization function.
+             * 
+             * Called automatically when constructing a DigitalOutput class instance.
+             * 
+             */
+            void init_specific_();
+
         public:
+            /**
+             * @brief Initial state of the output.
+             * 
+             */
+            const bool initialState;
+            /**
+             * @brief Whether the output is inverted or not.
+             * 
+             */
+            const bool inverted;
+            /**
+             * @brief Platform-specific flags passed to the constructor.
+             * 
+             */
+            const GPIO_Flag flags;
+            /**
+             * @brief GPIO pin assigned to the output.
+             * 
+             */
+            const GPIO_Pin& gpio;
+
+            /**
+             * @brief Construct a new digital output object.
+             * 
+             * @param pin The GPIO pin you want to assign to the output.
+             * @param inverted Whether the output shall be inverted or not.
+             * @param initialState The initial state to write to the output.
+             * @param flags Platform-specific flags for the output.
+             */
+            DigitalOutput(GPIO_Pin& pin, bool inverted = false, bool initialState = false, GPIO_Flag flags = NO_FLAGS);
+
+            /**
+             * @brief Construct a new digital output object.
+             * 
+             * @param pin The GPIO pin you want to assign to the output.
+             * @param inverted Whether the output shall be inverted or not.
+             * @param flags Platform-specific flags for the output.
+             */
+            DigitalOutput(GPIO_Pin& pin, bool inverted, GPIO_Flag flags);
+
+            /**
+             * @brief Construct a new digital output object.
+             * 
+             * @param pin The GPIO pin you want to assign to the output.
+             * @param flags Platform-specific flags for the output.
+             */
+            DigitalOutput(GPIO_Pin& pin, GPIO_Flag flags);
+
             /**
              * @brief Sets the output to the specified state.
              * 
              * @param state The state you want to set the digital output to as a boolean.
              */
-            virtual void write(bool state);
+            void write(bool state);
             /**
              * @brief Toggles the output (inverts its value).
              * 
              */
-            virtual void toggle();
+            void toggle();
             /**
              * @brief Enables the output.
              * 
              */
-            void enable() { write(true); };
+            void enable();
             /**
              * @brief Disables the output.
              * 
              */
-            virtual void disable() { write(false); }
+            void disable();
     };
 
     /**
-     * @brief Base class for digital input pins.
-     * Do not use this class directly. Use the 
-     * platform-specific `DigitalInput` class instead.
+     * @brief Represents a digital input.
      */
-    class DigitalInput_Base {
-        public:          
+    class DigitalInput {
+        private:
+            /**
+             * @brief Platform-specific initialization function.
+             * 
+             * Called automatically when constructing a DigitalInput class instance.
+             * 
+             */
+            void init_specific_();
+
+            /**
+             * @brief Platform-specific input read function.
+             * 
+             * This function does not need to take inversion into account.
+             * 
+             * @return Returns the digital state of the input, without any inversion.
+             */
+            bool read_specific_();
+
+        public:
+            /**
+             * @brief Whether the input is inverted.
+             * 
+             */
+            const bool inverted;
+            /**
+             * @brief Flags applied to the input.
+             * 
+             */
+            const GPIO_Flag flags;
+            /**
+             * @brief The GPIO pin assigned to the input.
+             * 
+             */
+            const GPIO_Pin& gpio;
+
+            /**
+             * @brief Construct a new digital niput object.
+             * 
+             * @param pin The GPIO pin you want to assign to the input.
+             * @param inverted Whether the input shall be inverted or not.
+             * @param flags Platform-specific flags for the input.
+             */
+            DigitalInput(GPIO_Pin& pin, bool inverted = false, GPIO_Flag flags = NO_FLAGS);
+
+            /**
+             * @brief Construct a new digital niput object.
+             * 
+             * @param pin The GPIO pin you want to assign to the input.
+             * @param flags Platform-specific flags for the input.
+             */
+            DigitalInput(GPIO_Pin& pin, GPIO_Flag flags);
+
             /**
              * @brief Reads the value from the input and returns it as a boolean.
              * 
              * @return Returns the digital value of the input as a boolean.
              */
-            virtual bool read();
+            bool read();
     };
 }
 
