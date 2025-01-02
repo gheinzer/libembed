@@ -1,4 +1,6 @@
 #include <libembed/bsp/autobsp.h>
+#include <libembed/util/debug.h>
+#include <string>
 
 #if LIBEMBED_BOARD_DISCO_F412ZG
 
@@ -52,10 +54,16 @@
     gpio::__GPIO_Pin& board::arduino::D14 = gpio::PB9;
     gpio::__GPIO_Pin& board::arduino::D15 = gpio::PB10;
 
+    static void __vcp_write(std::string data) {
+        board::UART_VCP.write(data);
+    }
+
     void board::beginVCP(uart::Baudrate baudrate) {
         board::UART_VCP_RX.setAlternate(GPIO_AF7_USART2);
         board::UART_VCP_TX.setAlternate(GPIO_AF7_USART2);
         board::UART_VCP.begin(baudrate);
+        debug::writeStringPtr = __vcp_write;
+        libembed_debug_info("VCP initialized by BSP.")
     }
 
 #endif
