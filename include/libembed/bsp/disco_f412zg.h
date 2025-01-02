@@ -4,6 +4,7 @@
  * @brief BSP for ST Microelectronics 32F412GDISCOVERY
  */
 #include <libembed/hal/gpio.h>
+#include <libembed/hal/uart.h>
 
 #ifndef LIBEMBED_BSP_DISCO_F412ZG_H_
 #define LIBEMBED_BSP_DISCO_F412ZG_H_
@@ -58,6 +59,21 @@ namespace embed::board {
         extern gpio::DigitalInput JOY_SEL;
         //! Alias for @ref JOY_SEL
         extern gpio::DigitalInput& joystick_selection;
+
+        //! UART interface for the virtual COM port VCP
+        extern uart::HardwareUART UART_VCP;
+
+        //! TX pin for the virtual COM port VCP
+        extern embed::gpio::__GPIO_Pin& UART_VCP_TX;
+        //! RX pin for the virtual COM port VCP
+        extern embed::gpio::__GPIO_Pin& UART_VCP_RX;
+
+        /**
+         * @brief Initialize the VCP with the specified baudrate
+         * 
+         * @param baudrate The baudrate to use for the VCP.
+         */
+        void beginVCP(uart::Baudrate baudrate);
 
         //! Arduino connector of the 32F412GDISCOVERY
         namespace arduino {

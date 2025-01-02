@@ -90,6 +90,13 @@ namespace embed::uart {
              * @return Returns the received data.
              */
             virtual DataFrame recvFrame(uint32_t timeout = LIBEMBED_CONFIG_STM32_UART_DEFAULT_RECV_TIMEOUT) = 0;
+
+            /**
+             * @brief Sends a string to the UART interface.
+             * 
+             * @param data The string to send to UART interface.
+             */
+            void write(std::string data);
     };
 
     /**
