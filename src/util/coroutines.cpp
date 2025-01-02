@@ -1,4 +1,5 @@
 #include <libembed/util/coroutines.h>
+#include <libembed/util/debug.h>
 #include <libembed/config.h>
 #include <vector>
 
@@ -20,8 +21,10 @@ static void __initStackPointer() {
 
 void coroutines::enterScheduler() {
     __initStackPointer();
+    libembed_debug_info("Entering coroutine scheduler...");
     while(1) {
         for(currentContext_ = 0; currentContext_ < activeCoroutines_.size(); currentContext_++) {
+            libembed_debug_trace("Rescheduling to coroutine " + activeCoroutines_[currentContext_]->name);
             activeCoroutines_[currentContext_]->__start_or_resume();
         }
     }
@@ -40,6 +43,7 @@ void coroutines::Coroutine_Base::start() {
     if(!isRunning) {
         activeCoroutines_.push_back(this);
         isRunning = true;
+        libembed_debug_trace("Coroutine " + name + " started.");
     }
 }
 
@@ -51,6 +55,7 @@ void coroutines::Coroutine_Base::stop() {
     }
     isRunning = false;
     wasCalled_ = false;
+    libembed_debug_trace("Coroutine " + name + " stopped.");
 }
 
 void coroutines::Coroutine_Base::__yield() {
@@ -61,12 +66,15 @@ void coroutines::Coroutine_Base::__yield() {
 
 void coroutines::Coroutine_Base::__start_or_resume() {
     if(!setjmp(yieldBuf_)) {
+        libembed_debug_trace("Coroutine " + name + " resumed.");
         if(!wasCalled_) {
             wasCalled_ = true;
             runFromEntryPoint_();
         } else {
             longjmp(resumeBuf_, 1); // Jump into the execution
         }
+    } else {
+        libembed_debug_trace("Coroutine " + name + " yielded.");
     }
 }
 
