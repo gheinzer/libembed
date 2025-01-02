@@ -6,9 +6,12 @@
 
 #include "stm32_hal.h"
 #include <libembed/hal/gpio/types.h>
+#include <libembed/arch/ident.h>
 
 #ifndef LIBEMBED_STM32_GPIO_H_
 #define LIBEMBED_STM32_GPIO_H_
+
+#include LIBEMBED_STRINGIFY(LIBEMBED_MCU_LINE/gpio.h)
 
 #define __GPIO_DEFINEPIN_H(port, pin) extern GPIO_Pin P##port##pin;
 #define __GPIO_DEFINEPIN_C(_port, _pin) embed::arch::arm::stm32::gpio::GPIO_Pin embed::arch::arm::stm32::gpio::P##_port##_pin = { .port = GPIO##_port, .pin = GPIO_PIN_##_pin , .pinNumber = _pin };
@@ -37,21 +40,29 @@
     function(port, 14); \
     function(port, 15);
 
-#if defined(STM32G0)
-    #include "stm32g0/gpio.h"
-#elif defined(STM32F4)
-    #include "stm32f4/gpio.h"
-#elif defined(__DOXYGEN__)
-    // Use the STM32F4 as an example device for Doxygen
-    #include "stm32f4/gpio.h"
-#else
-    #error Unsupported device. Please refer to the documentation for a list of supported devices.
+#if STM32G031xx
+    #include "stm32g031/gpio.h"
+#elif STM32F412xx
+    #include "stm32f412/gpio.h"
 #endif
+
+class embed::gpio::__GPIO_Pin {
+    public:
+        GPIO_TypeDef* port;
+        uint32_t pin;
+        uint32_t pinNumber;
+
+        /**
+         * @brief Set the GPIO pin to use the given alternate function.
+         * 
+         * @param alternate The alternate function to use.
+         */
+        void setAlternate(uint32_t alternate);
+};
 
 //! STM32-specific GPIO declarations
 namespace embed::arch::arm::stm32::gpio {
     using namespace embed::gpio;
-
 
     //! Push-pull output configuration. Only applicable for outputs.
     GPIO_Flag PUSHPULL = 1;

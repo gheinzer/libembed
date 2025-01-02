@@ -1,7 +1,7 @@
 /**
  * @file types.h
  * @author Gabriel Heinzer
- * @brief Type definitions for @ref libembed/hal/clock.h.
+ * @brief Common type definitions for @ref libembed/hal/clock.h.
  */
 
 #ifndef LIBEMBED_HAL_CLOCK_TYPES_H_

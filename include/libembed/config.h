@@ -25,6 +25,14 @@
     #define LIBEMBED_CONFIG_ENABLE_COROUTINES false
     #endif /* LIBEMBED_CONFIG_ENABLE_COROUTINES */
 
+    #ifndef LIBEMBED_CONFIG_STM32_UART_DEFAULT_SEND_TIMEOUT
+    #define LIBEMBED_CONFIG_STM32_UART_DEFAULT_SEND_TIMEOUT 1000
+    #endif /* LIBEMBED_CONFIG_STM32_UART_DEFAULT_SEND_TIMEOUT */
+
+    #ifndef LIBEMBED_CONFIG_STM32_UART_DEFAULT_RECV_TIMEOUT
+    #define LIBEMBED_CONFIG_STM32_UART_DEFAULT_RECV_TIMEOUT 1000
+    #endif /* LIBEMBED_CONFIG_STM32_UART_DEFAULT_SEND_TIMEOUT */
+
 #else
     // Doxygen should see all features, independent of the local configuration file
     
@@ -41,6 +49,22 @@
      * @warning Enabling coroutines may come with a performance and memory penalty.
      */
     #define LIBEMBED_CONFIG_ENABLE_COROUTINES true
+
+    /**
+     * @brief Default send timeout for STM32 UART transmissions.
+     * 
+     * Default value: 1000
+     * 
+     */
+    #define LIBEMBED_CONFIG_STM32_UART_DEFAULT_SEND_TIMEOUT 1000
+
+    /**
+     * @brief Default receive timeout for STM32 UART transmissions.
+     * 
+     * Default value: 1000
+     * 
+     */
+    #define LIBEMBED_CONFIG_RECV_UART_DEFAULT_SEND_TIMEOUT 1000
 
 #endif /* __DOXYGEN__ */
 

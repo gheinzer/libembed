@@ -1,6 +1,6 @@
 #include <libembed/bsp/autobsp.h>
 
-#if LIBEMBED_BOARD == disco_f412zg
+#if LIBEMBED_BOARD_DISCO_F412ZG
 
     embed::gpio::DigitalOutput embed::board::LD1(gpio::PE0, true);
     embed::gpio::DigitalOutput embed::board::LD2(gpio::PE1, true);

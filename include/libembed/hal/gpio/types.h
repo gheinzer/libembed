@@ -1,7 +1,7 @@
 /**
  * @file types.h
  * @author Gabriel Heinzer
- * @brief Type definitions for @ref libembed/hal/gpio.h.
+ * @brief Common type definitions for @ref libembed/hal/gpio.h.
  */
 #include <stdint.h>
 

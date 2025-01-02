@@ -5,6 +5,7 @@
  */
 
 #include "gpio.h"
+#include "uart.h"
 
 //! STM32-specific declarations
 namespace embed::arch::arm::stm32 { }

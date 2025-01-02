@@ -5,16 +5,22 @@
 
 using namespace embed::arch::arm::stm32;
 
-struct embed::gpio::__GPIO_Pin {
-    GPIO_TypeDef* port;
-    uint32_t pin;
-    uint32_t pinNumber;
-};
-
 __GPIO_DEFINEPORTS_C;
 
 void __enable_clocks() {
     __FORALLPORTS_PS(__HAL_RCC_GPIO, _CLK_ENABLE());
+}
+
+// *** gpio::__GPIO_Pin ***
+void embed::gpio::__GPIO_Pin::setAlternate(uint32_t alternate) {
+    GPIO_InitTypeDef initStruct;
+    initStruct.Pin = pin;
+    initStruct.Alternate = alternate;
+    initStruct.Mode = GPIO_MODE_AF_PP;
+    initStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    initStruct.Pull = GPIO_NOPULL;
+
+    HAL_GPIO_Init(port, &initStruct);
 }
 
 // *** gpio::DigitalOutput ***
@@ -37,7 +43,7 @@ void gpio::DigitalOutput::init_specific_() {
     }
 
     initStruct.Pin = gpio.pin;
-    initStruct.Speed = GPIO_SPEED_FAST;
+    initStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     
     HAL_GPIO_Init(gpio.port, &initStruct);
 }
@@ -68,7 +74,7 @@ void gpio::DigitalInput::init_specific_() {
     }
 
     initStruct.Pin = gpio.pin;
-    initStruct.Speed = GPIO_SPEED_FAST;
+    initStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     initStruct.Mode = GPIO_MODE_INPUT;
     
     HAL_GPIO_Init(gpio.port, &initStruct);
