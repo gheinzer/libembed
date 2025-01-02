@@ -15,9 +15,13 @@
 
 #if LIBEMBED_CONFIG_ENABLE_DEBUGLEVEL_INFO == true
     #define libembed_debug_info(message) embed::debug::info(message, __func__);
+#else
+    #define libembed_debug_info(message)
 #endif
 #if LIBEMBED_CONFIG_ENABLE_DEBUGLEVEL_TRACE == true
-    #define libembed_debug_trace(message) embed::debug::trace(message);
+    #define libembed_debug_trace(message) embed::debug::trace(message, __func__);
+#else
+    #define libembed_debug_trace(message)
 #endif
 
 namespace embed::debug {
