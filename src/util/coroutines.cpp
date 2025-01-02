@@ -48,7 +48,7 @@ void coroutines::Coroutine_Base::start() {
 }
 
 void coroutines::Coroutine_Base::stop() {
-    for(int i = 0; i < activeCoroutines_.size(); i++) {
+    for(unsigned int i = 0; i < activeCoroutines_.size(); i++) {
         if(activeCoroutines_.at(i) == this) {
             activeCoroutines_.erase(activeCoroutines_.begin() + i);
         }
