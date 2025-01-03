@@ -280,6 +280,27 @@
                     stackAllocatorPtr_ = std::make_shared<StackAllocator<tmpl_stackSize>>();
                 };
         };
+
+        /**
+         * @brief Coroutine-safe lock class.
+         */
+        class Lock {
+            private:
+                //! Internal lock state variable
+                bool locked_ = false;
+
+            public:
+                /**
+                 * @brief Wait for the lock to be released, if it is not already,
+                 * and acquire it.
+                 */
+                void acquire();
+                
+                /**
+                 * @brief Release the lock for another process to use.
+                 */
+                void release();
+        };
     }
 
 #else

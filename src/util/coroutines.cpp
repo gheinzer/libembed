@@ -92,4 +92,13 @@ void coroutines::Coroutine_Base::join() {
     while(isActive) yield;
 }
 
+void coroutines::Lock::acquire() {
+    while(locked_) yield;
+    locked_ = true;
+}
+
+void coroutines::Lock::release() {
+    locked_ = false;
+}
+
 #endif
