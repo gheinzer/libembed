@@ -198,12 +198,25 @@
                  */
                 const std::any entryPointArgument;
                 /**
-                 * @brief Specifies if the coroutine is currently running. This
+                 * @brief Specifies if the coroutine is currently active. This
                  * has nothing to do with the coroutine having yielded or not,
                  * but purely with @ref start() and @ref stop() being called or
                  * the entry point function returning.
+                 * 
+                 * @see
+                 * - @ref start()
+                 * - @ref stop()
                  */
-                bool isRunning = false;
+                bool isActive = false;
+                /**
+                 * @brief Specifies if the currently is currently paused or
+                 * not.
+                 * 
+                 * @see
+                 *  - @ref pause()
+                 *  - @ref resume()
+                 */
+                bool isPaused = false;
 
                 /**
                  * @internal
@@ -233,6 +246,20 @@
                  * @brief Blocks the calling coroutine until the target coroutine has returned.
                  */
                 void join();
+
+                /**
+                 * @brief Pause a running coroutine.
+                 * @see 
+                 *  - @ref resume()
+                 */
+                void pause();
+
+                /**
+                 * @brief Resume a paused coroutine.
+                 * @see
+                 *  - @ref pause
+                 */
+                void resume();
         };
 
         /**

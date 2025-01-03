@@ -41,18 +41,30 @@ coroutines::Coroutine_Base::Coroutine_Base(CoroutineEntryPoint_t entryPoint, siz
 }
 
 void coroutines::Coroutine_Base::start() {
-    if(!isRunning) {
+    if(!isActive) {
         activeCoroutines_.push_back(this);
-        isRunning = true;
+        isActive = true;
+        isPaused = false;
         libembed_debug_trace("Coroutine " + name + " started.");
     }
 }
 
 void coroutines::Coroutine_Base::stop() {
     activeCoroutines_.erase(std::remove(activeCoroutines_.begin(), activeCoroutines_.end(), this), activeCoroutines_.end());
-    isRunning = false;
+    isActive = false;
     wasCalled_ = false;
+    isPaused = false;
     libembed_debug_trace("Coroutine " + name + " stopped.");
+}
+
+void coroutines::Coroutine_Base::pause() {
+    if(isActive)
+        isPaused = true;
+}
+
+void coroutines::Coroutine_Base::resume() {
+    if(isActive)
+        isPaused = false;
 }
 
 void coroutines::Coroutine_Base::__yield() {
@@ -62,6 +74,7 @@ void coroutines::Coroutine_Base::__yield() {
 }
 
 void coroutines::Coroutine_Base::__start_or_resume() {
+    if(isPaused) return; // Don't resume if the coroutine is currently paused
     if(!setjmp(yieldBuf_)) {
         libembed_debug_trace("Coroutine " + name + " resumed.");
         if(!wasCalled_) {
@@ -76,7 +89,7 @@ void coroutines::Coroutine_Base::__start_or_resume() {
 }
 
 void coroutines::Coroutine_Base::join() {
-    while(isRunning) yield;
+    while(isActive) yield;
 }
 
 #endif
