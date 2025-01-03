@@ -2,6 +2,7 @@
 #include <libembed/util/debug.h>
 #include <libembed/config.h>
 #include <vector>
+#include <algorithm>
 
 #if LIBEMBED_CONFIG_ENABLE_COROUTINES == true
 
@@ -48,11 +49,7 @@ void coroutines::Coroutine_Base::start() {
 }
 
 void coroutines::Coroutine_Base::stop() {
-    for(unsigned int i = 0; i < activeCoroutines_.size(); i++) {
-        if(activeCoroutines_.at(i) == this) {
-            activeCoroutines_.erase(activeCoroutines_.begin() + i);
-        }
-    }
+    activeCoroutines_.erase(std::remove(activeCoroutines_.begin(), activeCoroutines_.end(), this), activeCoroutines_.end());
     isRunning = false;
     wasCalled_ = false;
     libembed_debug_trace("Coroutine " + name + " stopped.");

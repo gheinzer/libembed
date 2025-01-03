@@ -14,6 +14,7 @@
 #include <memory>
 #include <stdint.h>
 #include <libembed/config.h>
+#include <libembed/util/debug.h>
 
 #ifndef COROUTINES_HPP_
 #define COROUTINES_HPP_
@@ -93,6 +94,12 @@
                  * 
                  */
                 uint8_t* stackEnd;
+
+                /**
+                 * @brief Clears the stack and sets all bytes to 0.
+                 * 
+                 */
+                virtual void clear() = 0;
         };
 
         /**
@@ -113,9 +120,14 @@
                  * @brief Construct a new Stack Allocator.
                  * 
                  */
-                StackAllocator() : StackAllocatorInterface() {
+                StackAllocator() {
+                    clear();
                     stackStart = stack_;
                     stackEnd = stackStart + stackSize - 1;
+                }
+
+                void clear() override {
+                    std::fill_n(stack_, stackSize, 0);
                 }
         };
 
@@ -149,10 +161,10 @@
 
                 /**
                  * @brief Stack allocator for allocating the coroutine's stack.
-                 * This is stored as a unique_ptr so the stack allocator can be allocated
+                 * This is stored as a shared_ptr so the stack allocator can be allocated
                  * on the stack.
                  */
-                std::unique_ptr<StackAllocatorInterface> stackAllocatorPtr_;
+                std::shared_ptr<StackAllocatorInterface> stackAllocatorPtr_;
 
             protected:
                 /**
@@ -238,7 +250,7 @@
                  * @param name Name of the coroutine for debugging purposes.
                  */
                 Coroutine(CoroutineEntryPoint_t entryPoint, std::any entryPointArgument = NULL, const std::string name = "<unknown>") : Coroutine_Base(entryPoint, tmpl_stackSize, entryPointArgument, name) {
-                    stackAllocatorPtr_ = std::make_unique<StackAllocator<tmpl_stackSize>>();
+                    stackAllocatorPtr_ = std::make_shared<StackAllocator<tmpl_stackSize>>();
                 };
         };
     }
@@ -246,7 +258,7 @@
 #else
 
     /**
-     * @brief Yield macro placeholder. This expamds to nothing when
+     * @brief Yield macro placeholder. This expands to nothing when
      * coroutines are disabled. For further information, please refer to
      * @ref LIBEMBED_CONFIG_ENABLE_COROUTINES.
      * 

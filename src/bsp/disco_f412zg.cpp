@@ -1,5 +1,6 @@
 #include <libembed/bsp/autobsp.h>
 #include <libembed/util/debug.h>
+#include <libembed/config.h>
 #include <string>
 
 #if LIBEMBED_BOARD_DISCO_F412ZG
@@ -62,7 +63,11 @@
         board::UART_VCP_RX.setAlternate(GPIO_AF7_USART2);
         board::UART_VCP_TX.setAlternate(GPIO_AF7_USART2);
         board::UART_VCP.begin(baudrate);
-        debug::writeStringPtr = __vcp_write;
+
+        #if LIBEMBED_CONFIG_ENABLE_DEBUGGING
+            debug::writeStringPtr = __vcp_write;
+        #endif
+
         libembed_debug_info("VCP initialized by BSP.")
     }
 
