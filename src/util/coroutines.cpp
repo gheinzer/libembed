@@ -4,9 +4,9 @@
 #include <vector>
 #include <algorithm>
 
-#if LIBEMBED_CONFIG_ENABLE_COROUTINES == true
-
 using namespace embed;
+
+#if LIBEMBED_CONFIG_ENABLE_COROUTINES == true
 
 #define NO_COROUTINE SIZE_MAX
 #define SCHEDULER_STACK_MARGIN 256
@@ -105,5 +105,13 @@ void coroutines::Lock::release() {
 void coroutines::Lock::release_noyield() {
     locked_ = false;
 }
+
+#else
+
+void coroutines::Lock::acquire() { }
+
+void coroutines::Lock::release() { }
+
+void coroutines::Lock::release_noyield() { }
 
 #endif

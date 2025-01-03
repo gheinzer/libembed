@@ -280,46 +280,6 @@
                     stackAllocatorPtr_ = std::make_shared<StackAllocator<tmpl_stackSize>>();
                 };
         };
-
-        /**
-         * @brief Coroutine-safe lock class.
-         */
-        class Lock {
-            private:
-                //! Internal lock state variable
-                bool locked_ = false;
-
-            public:
-                /**
-                 * @brief Wait for the lock to be released, if it is not already,
-                 * and acquire it.
-                 * 
-                 * If the lock is not released yet, this yields the
-                 * current coroutine.
-                 */
-                void acquire();
-
-                /**
-                 * @brief Release the lock for another process to use.
-                 * 
-                 * This yields the current coroutine after releasing the lock.
-                 * 
-                 * @see
-                 *  - @ref release_noyield()
-                 */
-                void release();
-
-                /**
-                 * @brief Releases the lock for another process to use without yielding.
-                 * 
-                 * In contrast to @ref release, this does not yield the current
-                 * coroutine after unlocking.
-                 * 
-                 * @see
-                 * - @ref release()
-                 */
-                void release_noyield();
-        };
     }
 
 #else
@@ -332,6 +292,53 @@
      */
     #define yield
 
-#endif /* LIBEMBED_ENABLE_COROUTINES == true */
+#endif /* LIBEMBED_CONFIG_ENABLE_COROUTINES == true */
+
+// *** Configuration-independent declarations ***
+namespace embed::coroutines {
+    /**
+     * @brief Coroutine-safe lock class.
+     * 
+     * This is also available if coroutines are disabled.
+     */
+    class Lock {
+        private:
+            #if LIBEMBED_CONFIG_ENABLE_COROUTINES
+                //! Internal lock state variable
+                bool locked_ = false;
+            #endif
+
+        public:
+            /**
+             * @brief Wait for the lock to be released, if it is not already,
+             * and acquire it.
+             * 
+             * If the lock is not released yet, this yields the
+             * current coroutine.
+             */
+            void acquire();
+
+            /**
+             * @brief Release the lock for another process to use.
+             * 
+             * This yields the current coroutine after releasing the lock.
+             * 
+             * @see
+             *  - @ref release_noyield()
+             */
+            void release();
+
+            /**
+             * @brief Releases the lock for another process to use without yielding.
+             * 
+             * In contrast to @ref release, this does not yield the current
+             * coroutine after unlocking.
+             * 
+             * @see
+             * - @ref release()
+             */
+            void release_noyield();
+    };
+}
 
 #endif /* COROUTINES_HPP_ */
