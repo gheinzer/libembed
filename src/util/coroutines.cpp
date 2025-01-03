@@ -98,6 +98,11 @@ void coroutines::Lock::acquire() {
 }
 
 void coroutines::Lock::release() {
+    release_noyield();
+    yield;
+}
+
+void coroutines::Lock::release_noyield() {
     locked_ = false;
 }
 

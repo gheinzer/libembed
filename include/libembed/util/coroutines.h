@@ -293,13 +293,32 @@
                 /**
                  * @brief Wait for the lock to be released, if it is not already,
                  * and acquire it.
+                 * 
+                 * If the lock is not released yet, this yields the
+                 * current coroutine.
                  */
                 void acquire();
-                
+
                 /**
                  * @brief Release the lock for another process to use.
+                 * 
+                 * This yields the current coroutine after releasing the lock.
+                 * 
+                 * @see
+                 *  - @ref release_noyield()
                  */
                 void release();
+
+                /**
+                 * @brief Releases the lock for another process to use without yielding.
+                 * 
+                 * In contrast to @ref release, this does not yield the current
+                 * coroutine after unlocking.
+                 * 
+                 * @see
+                 * - @ref release()
+                 */
+                void release_noyield();
         };
     }
 
