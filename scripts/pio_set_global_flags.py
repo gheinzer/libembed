@@ -1,13 +1,22 @@
-Import("projenv", "env")
-projenv.ProcessFlags("-std=c++17 -fexceptions")
+def appendToEnv(environment):
+    defines = []
+    defines.append(("LIBEMBED_PLATFORM", environment["PIOPLATFORM"]))
+    boardName = str(environment["BOARD"]).strip()
+    defines.append(("LIBEMBED_BOARD", boardName))
+    defines.append(f"LIBEMBED_BOARD_{boardName.upper()}")
+    defines.append(("LIBEMBED_FRAMEWORK", environment["PIOFRAMEWORK"]))
 
-defines = list(projenv["CPPDEFINES"])
-defines.append(("LIBEMBED_PLATFORM", projenv["PIOPLATFORM"]))
-boardName = str(projenv["BOARD"]).strip()
-defines.append(("LIBEMBED_BOARD", boardName))
-defines.append(f"LIBEMBED_BOARD_{boardName.upper()}")
-defines.append(("LIBEMBED_FRAMEWORK", projenv["PIOFRAMEWORK"]))
+    flags = []
+    flags.append("-std=c++17")
+    flags.append("-fexceptions")
 
-projenv.Append(
-    CPPDEFINES=defines
-)
+    environment.Append(
+        CPPDEFINES=list(environment.get("CPPDEFINES", [])) + defines,
+        CXXFLAGS=list(environment.get("CCFLAGS", [])) + flags
+    )
+
+appendToEnv(DefaultEnvironment())
+
+Import("env", "projenv")
+appendToEnv(env)
+appendToEnv(projenv)
