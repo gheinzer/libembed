@@ -26,6 +26,14 @@ namespace embed::clock {
      * @param milliseconds The number of milliseconds you want to pause the execution for.
      */
     void delay(unsigned int milliseconds);
+
+    /**
+     * @brief Configures the microcontroller to run on the highest available
+     * internal oscillator with the highest possible frequency.
+     * 
+     * This may not be available on all platforms.
+     */
+    void setMaximumFrequency();
 };
 
 #endif /* LIBEMBED_HAL_CLOCK_TYPES_H_ */
