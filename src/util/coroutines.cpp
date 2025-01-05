@@ -37,7 +37,7 @@ void coroutines::__yield() {
 }
 
 // *** coroutines::Coroutine_Base class ***
-coroutines::Coroutine_Base::Coroutine_Base(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument, const std::string name) : entryPoint(entryPoint), name(name), stackSize(stackSize), entryPointArgument(entryPointArgument) {
+coroutines::Coroutine_Base::Coroutine_Base(size_t stackSize) : stackSize(stackSize) {
 }
 
 void coroutines::Coroutine_Base::start() {

@@ -12,6 +12,7 @@
 #include <map>
 #include <any>
 #include <memory>
+#include <functional>
 #include <stdint.h>
 #include <libembed/config.h>
 #include <libembed/util/debug.h>
@@ -178,25 +179,20 @@
                  * @param entryPointArgument Argument to pass to the entry point.
                  * @param name Name of the coroutine (for debugging purposes).
                  */
-                Coroutine_Base(CoroutineEntryPoint_t entryPoint, size_t stackSize, std::any entryPointArgument = NULL, const std::string name = "<unknown>");
+                Coroutine_Base(size_t stackSize);
+
+                /**
+                 * @brief Lambda function for calling the entry point with the given arguments.
+                 * 
+                 * Implemented in the template class @ref Coroutine.
+                 */
+                std::function<void()> entryPointCaller_;
 
             public:
-                /**
-                 * @brief The entry point for the coroutine.
-                 */
-                const CoroutineEntryPoint_t entryPoint;
-                /**
-                 * @brief The name of the coroutine.
-                 */
-                const std::string name;
                 /**
                  * @brief The stack size of the coroutine.
                  */
                 const size_t stackSize;
-                /**
-                 * @brief Entry point argument given to the constructor.
-                 */
-                const std::any entryPointArgument;
                 /**
                  * @brief Specifies if the coroutine is currently active. This
                  * has nothing to do with the coroutine having yielded or not,
@@ -272,12 +268,17 @@
                 /**
                  * @brief Construct a new Coroutine object.
                  * 
-                 * @param entryPoint Entry point of the coroutine.
-                 * @param entryPointArgument Argument to pass to the entry point.
+                 * @param entryPointArgs Arguments to pass to the entry point.
                  * @param name Name of the coroutine for debugging purposes.
                  */
-                Coroutine(CoroutineEntryPoint_t entryPoint, std::any entryPointArgument = NULL, const std::string name = "<unknown>") : Coroutine_Base(entryPoint, tmpl_stackSize, entryPointArgument, name) {
+                template<typename tmpl_entryPoint_t, typename... tmpl_entryPointArgs_t>
+                Coroutine(tmpl_entryPoint_t&& entryPoint, tmpl_entryPointArgs_t&&... entryPointArgs) 
+                    : Coroutine_Base(tmpl_stackSize)
+                {
                     stackAllocatorPtr_ = std::make_shared<StackAllocator<tmpl_stackSize>>();
+                    entryPointCaller_ = [&] {
+                        entryPoint(std::forward<tmpl_entryPointArgs_t>(entryPointArgs)...);
+                    };
                 };
         };
     }
