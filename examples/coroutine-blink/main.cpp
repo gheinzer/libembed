@@ -5,11 +5,11 @@
 using namespace embed;
 
 // Entry point for the blinker coroutines
-void blinker(coroutines::Coroutine_Base& coro, std::any output);
+void blinker(gpio::DigitalOutput& output, int interval);
 
 // Blinker coroutines
-coroutines::Coroutine<64> greenBlinker(blinker, &board::led_green);
-coroutines::Coroutine<64> orangeBlinker(blinker, &board::led_orange);
+coroutines::Coroutine<64> greenBlinker{ blinker, board::led_green, 300 };
+coroutines::Coroutine<64> orangeBlinker{ blinker, board::led_orange, 400 };
 
 int main() {
     // Initialize the clock HAL
@@ -23,15 +23,12 @@ int main() {
     coroutines::enterScheduler();
 }
 
-void blinker(coroutines::Coroutine_Base& coro, std::any output) {
-    // Cast the std::any argument into a DigitalOutput*
-    gpio::DigitalOutput* led_output = std::any_cast<gpio::DigitalOutput*>(output);
-
+void blinker(gpio::DigitalOutput& output, int interval) {
     while(1) {
         // Toggle the output
-        led_output->toggle();
+        output.toggle();
 
-        // Delay the coroutine for 300 ms
-        clock::delay(300);
+        // Delay the coroutine for the given interval
+        clock::delay(interval);
     }
 }
