@@ -23,6 +23,6 @@
  * @brief BSP (board support package) for the board you are currently building for.
  * 
  */
-namespace embed::board { }
+namespace embed::board { using namespace LIBEMBED_BOARD; }
 
 #endif /* LIBEMBED_BSP_AUTOBSP_H_ */

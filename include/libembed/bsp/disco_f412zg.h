@@ -11,7 +11,7 @@
 
 namespace embed::board {
     //! BSP for ST Microelectronics 32F412GDISCOVERY
-    inline namespace disco_f412zg {
+    namespace disco_f412zg {
         // *** Built-in LEDs ***
         //! LD1 (green LED)
         extern gpio::DigitalOutput LD1;
@@ -20,7 +20,7 @@ namespace embed::board {
 
         //! LD2 (orange LED)
         extern gpio::DigitalOutput LD2;
-        //! Alias for @ref LD1
+        //! Alias for @ref LD2
         extern gpio::DigitalOutput& led_orange;
 
         //! LD3 (red LED)
