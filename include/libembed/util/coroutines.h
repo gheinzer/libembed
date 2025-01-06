@@ -172,11 +172,8 @@
                  * 
                  * @note This constructor is `protected` to prevent instantiation of this base class.
                  * 
-                 * @param entryPoint Entry point function of the coroutine.
                  * @param stackSize Stack size of the coroutine. Note that if the coroutine
                  * exceeds the stack size, unpredictable things will happen.
-                 * @param entryPointArgument Argument to pass to the entry point.
-                 * @param name Name of the coroutine (for debugging purposes).
                  */
                 Coroutine_Base(size_t stackSize);
 
@@ -260,15 +257,25 @@
         /**
          * @brief Template class for a coroutine.
          * 
-         * @tparam tmpl_stackSize The size of the stack you want the coroutine to have.
+         * @tparam tmpl_stackSize The size of the stack you want the coroutine to have. Make this large
+         * enough to prevent a stack overflow.
          */
         template<size_t tmpl_stackSize> class Coroutine : public Coroutine_Base {
             public:
                 /**
                  * @brief Construct a new Coroutine object.
                  * 
-                 * @param entryPointArgs Arguments to pass to the entry point.
-                 * @param name Name of the coroutine for debugging purposes.
+                 * Example usage:
+                 * @code{.cpp}
+                 * void entryPoint(int arg1, int arg2) { ... }
+                 * Coroutine<64> blinker{ entryPoint, 10, 20 };
+                 * @endcode
+                 * 
+                 * @tparam tmpl_entryPoint_t Type of the entry point.
+                 * @tparam tmpl_entryPointArgs_t Types of the entry point arguments.
+                 * 
+                 * @param entryPoint Entry point of the coroutine.
+                 * @param entryPointArgs Variadic arguments to pass to the entry point.
                  */
                 template<typename tmpl_entryPoint_t, typename... tmpl_entryPointArgs_t>
                 Coroutine(tmpl_entryPoint_t&& entryPoint, tmpl_entryPointArgs_t&&... entryPointArgs) 
