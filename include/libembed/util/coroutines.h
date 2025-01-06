@@ -263,7 +263,7 @@
          * 
          * @tparam tmpl_stackSize The size of the stack you want the coroutine to have.
          */
-        template<size_t tmpl_stackSize> class Coroutine : public Coroutine_Base {            
+        template<size_t tmpl_stackSize> class Coroutine : public Coroutine_Base {
             public:
                 /**
                  * @brief Construct a new Coroutine object.
@@ -276,8 +276,14 @@
                     : Coroutine_Base(tmpl_stackSize)
                 {
                     stackAllocatorPtr_ = std::make_shared<StackAllocator<tmpl_stackSize>>();
-                    entryPointCaller_ = [&] {
-                        entryPoint(std::forward<tmpl_entryPointArgs_t>(entryPointArgs)...);
+                    typedef std::tuple<tmpl_entryPointArgs_t...> args_tuple;
+
+                    // The arguments and the entry point must be passed by value because
+                    // of the context switch
+                    args_tuple args(std::forward<tmpl_entryPointArgs_t>(entryPointArgs)...);
+
+                    entryPointCaller_ = [args_tpl=args, ep=entryPoint] {
+                        ep(std::get<tmpl_entryPointArgs_t>(args_tpl)...);
                     };
                 };
         };
