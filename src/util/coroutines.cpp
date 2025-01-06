@@ -16,6 +16,8 @@ static std::vector<coroutines::Coroutine_Base*> activeCoroutines_ = {};
 static uint8_t* coroutineStackEndPtr_;
 static size_t currentContext_ = NO_COROUTINE;
 
+coroutines::Coroutine_Base* coroutines::current;
+
 static void __initStackPointer() {
     coroutineStackEndPtr_ = coroutines::__addStackPointer(coroutines::__getStackPointer(), SCHEDULER_STACK_MARGIN);
 }
@@ -25,6 +27,8 @@ void coroutines::enterScheduler() {
     libembed_debug_info("Entering coroutine scheduler...");
     while(1) {
         for(currentContext_ = 0; currentContext_ < activeCoroutines_.size(); currentContext_++) {
+            embed::coroutines::current = activeCoroutines_[currentContext_];
+            
             libembed_debug_trace("Rescheduling to coroutine " + activeCoroutines_[currentContext_]->name);
             activeCoroutines_[currentContext_]->__start_or_resume();
         }
