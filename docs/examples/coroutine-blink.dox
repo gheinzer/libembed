@@ -1,0 +1,11 @@
+/**
+
+@example coroutine-blink/main.cpp
+
+This is an example for making two LEDs blink with different intervals in parallel.
+
+It makes use of the @ref libembed/util/coroutines.h API.
+
+The two coroutines are configured to have a stack size of 64 Bytes.
+
+*/

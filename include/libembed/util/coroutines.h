@@ -2,8 +2,7 @@
  * @file coroutines.h
  * @author Gabriel Heinzer
  * @brief C++ coroutine implementation allowing for coroutine-specific stack memory.
- * 
- * @example coroutine-blink/main.cpp
+
  */
 
 #include <setjmp.h>

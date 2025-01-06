@@ -1,0 +1,8 @@
+/**
+@example libembed_config.h
+
+Example configuration file for `libembed`.
+
+This file must be available in the include path of your project, i.e. you must be able to include it using `#include <libembed_config.h>`.
+If you're using PlatformIO, put it in the `include` folder of your project.
+*/

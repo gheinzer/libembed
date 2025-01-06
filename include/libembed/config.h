@@ -6,8 +6,6 @@
  * @note This is the header the library includes for getting the configuration values. If you want to create a configuration file,
  * call it `libembed_config.h` and make sure to include it in your include search path.
  * Undefined configuration values are set to their default values automatically.
- * 
- * @example libembed_config.h
  */
 
 #ifndef LIBEMBED_CONFIG_H_

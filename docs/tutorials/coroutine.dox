@@ -16,21 +16,22 @@ You can now use the @ref libembed/util/coroutines.h header:
 @endcode
 
 @section declaring-a-coroutine Declaring a coroutine
-Coroutines are represented by the @ref embed::coroutines::Coroutine object. Each coroutine has an entry point function, which is called upon entry of a coroutine.
+Coroutines are represented by the @ref embed::coroutines::Coroutine object.
+Each coroutine has an entry point function, which is called upon entry of a coroutine.
 
-In addition to that, each coroutine has it's individual stack memory which stores all local variables of the entry point and any
-subsequent calls. You can also pass an argument to the entry point of the coroutine, allowing you to use an entry point for multiple
-different functions (e.g. blinking two LEDs in different intervals by passing these parameters).
+In addition to that, each coroutine has it's individual stack memory which stores all local variables of the entry point function and any
+subsequent calls. You can also pass arguments to the entry point of the coroutine, allowing you to use one entry point for multiple
+coroutines (e.g. blinking two LEDs in different intervals by passing these parameters).
 
 @code{.cpp}
 // Entry point declaration to the coroutine
-void blinker(embed::coroutines::Coroutine& coroutine, std::any interval);
+void blinker(int interval);
 
-// Declare a coroutine with stack size 256 and 100 as the argument
-embed::coroutines::Coroutine<256> blinkCoroutine(blinker, 100);
+// Declare a coroutine with stack size 256 and 100 as an argument
+embed::coroutines::Coroutine<256> blinkCoroutine{ blinker, 100 };
 @endcode
 
-After you have defined a coroutine, you have to start it, if you want it to do anything. You can do this
+After you have defined a coroutine, you have to start it (if you want it to do anything). You can do this
 by calling @ref embed::coroutines::Coroutine::start.
 
 @code{.cpp}
