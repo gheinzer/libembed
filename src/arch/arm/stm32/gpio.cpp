@@ -81,7 +81,7 @@ void gpio::DigitalInput::init_specific_() {
 }
 
 bool gpio::DigitalInput::read_specific_() { 
-    GPIO_PinState state = HAL_GPIO_ReadPin(gpio.port, gpio.pinNumber);
+    GPIO_PinState state = HAL_GPIO_ReadPin(gpio.port, gpio.pin);
     return state == GPIO_PIN_SET;
 }
 
