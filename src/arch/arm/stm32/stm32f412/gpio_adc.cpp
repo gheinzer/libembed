@@ -10,21 +10,21 @@ using namespace embed::arch::arm::stm32;
 
 // *** Analog input pins ***
 gpio::AnalogInput_Pin stm32f412::gpio::PA0_ADC1_0 =  { .gpio = &(gpio::PA0), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA1_ADC1_1 =  { .gpio = &(gpio::PA1), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA2_ADC1_2 =  { .gpio = &(gpio::PA2), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA3_ADC1_3 =  { .gpio = &(gpio::PA3), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA4_ADC1_4 =  { .gpio = &(gpio::PA4), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA5_ADC1_5 =  { .gpio = &(gpio::PA5), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA6_ADC1_6 =  { .gpio = &(gpio::PA6), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PA7_ADC1_7 =  { .gpio = &(gpio::PA7), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PB0_ADC1_8 =  { .gpio = &(gpio::PB0), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PB1_ADC1_9 =  { .gpio = &(gpio::PB1), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PC0_ADC1_10 = { .gpio = &(gpio::PC0), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PC1_ADC1_11 = { .gpio = &(gpio::PC1), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PC2_ADC1_12 = { .gpio = &(gpio::PC2), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PC3_ADC1_13 = { .gpio = &(gpio::PC3), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PC4_ADC1_14 = { .gpio = &(gpio::PC4), .channel = 0 };
-gpio::AnalogInput_Pin stm32f412::gpio::PC5_ADC1_15 = { .gpio = &(gpio::PC5), .channel = 0 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA1_ADC1_1 =  { .gpio = &(gpio::PA1), .channel = 1 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA2_ADC1_2 =  { .gpio = &(gpio::PA2), .channel = 2 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA3_ADC1_3 =  { .gpio = &(gpio::PA3), .channel = 3 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA4_ADC1_4 =  { .gpio = &(gpio::PA4), .channel = 4 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA5_ADC1_5 =  { .gpio = &(gpio::PA5), .channel = 5 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA6_ADC1_6 =  { .gpio = &(gpio::PA6), .channel = 6 };
+gpio::AnalogInput_Pin stm32f412::gpio::PA7_ADC1_7 =  { .gpio = &(gpio::PA7), .channel = 7 };
+gpio::AnalogInput_Pin stm32f412::gpio::PB0_ADC1_8 =  { .gpio = &(gpio::PB0), .channel = 8 };
+gpio::AnalogInput_Pin stm32f412::gpio::PB1_ADC1_9 =  { .gpio = &(gpio::PB1), .channel = 9 };
+gpio::AnalogInput_Pin stm32f412::gpio::PC0_ADC1_10 = { .gpio = &(gpio::PC0), .channel = 10 };
+gpio::AnalogInput_Pin stm32f412::gpio::PC1_ADC1_11 = { .gpio = &(gpio::PC1), .channel = 11 };
+gpio::AnalogInput_Pin stm32f412::gpio::PC2_ADC1_12 = { .gpio = &(gpio::PC2), .channel = 12 };
+gpio::AnalogInput_Pin stm32f412::gpio::PC3_ADC1_13 = { .gpio = &(gpio::PC3), .channel = 13 };
+gpio::AnalogInput_Pin stm32f412::gpio::PC4_ADC1_14 = { .gpio = &(gpio::PC4), .channel = 14 };
+gpio::AnalogInput_Pin stm32f412::gpio::PC5_ADC1_15 = { .gpio = &(gpio::PC5), .channel = 15 };
 
 // *** Analog-to-Digital-Converter ***
 static volatile uint32_t results[16] = { 0 };
@@ -65,6 +65,8 @@ static void adc_addChannel(gpio::AnalogInput_Pin& pin) {
 
     // Configure the channel's sample time
     MODIFY_REG(*smpr_registerPtr, ((~0b110) & 0b111) << smpr_registerShift, 0b110 << smpr_registerShift);
+
+    volatile uint32_t test = ADC1->SQR3;
 
     pin.gpio->setAnalog();
 
