@@ -15,3 +15,7 @@
     function(B); \
     function(C); \
     function(D)
+
+namespace embed::arch::arm::stm32::stm32f412::gpio {
+    
+}

@@ -25,3 +25,24 @@
     function(F); \
     function(G); \
     function(H)
+
+namespace embed::arch::arm::stm32::stm32f412::gpio {
+    using namespace embed::gpio;
+
+    extern AnalogInput_Pin ADC1_0;
+    extern AnalogInput_Pin ADC1_1;
+    extern AnalogInput_Pin ADC1_2;
+    extern AnalogInput_Pin ADC1_3;
+    extern AnalogInput_Pin ADC1_4;
+    extern AnalogInput_Pin ADC1_5;
+    extern AnalogInput_Pin ADC1_6;
+    extern AnalogInput_Pin ADC1_7;
+    extern AnalogInput_Pin ADC1_8;
+    extern AnalogInput_Pin ADC1_9;
+    extern AnalogInput_Pin ADC1_10;
+    extern AnalogInput_Pin ADC1_11;
+    extern AnalogInput_Pin ADC1_12;
+    extern AnalogInput_Pin ADC1_13;
+    extern AnalogInput_Pin ADC1_14;
+    extern AnalogInput_Pin ADC1_15;
+}

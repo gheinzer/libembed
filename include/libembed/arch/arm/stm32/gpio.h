@@ -46,11 +46,11 @@
     #include "stm32f412/gpio.h"
 #endif
 
-class embed::gpio::__GPIO_Pin {
+class embed::gpio::_GPIO_Pin_specific {
     public:
         GPIO_TypeDef* port;
         uint32_t pin;
-        uint32_t pinNumber;
+        uint8_t pinNumber;
 
         /**
          * @brief Set the GPIO pin to use the given alternate function.
@@ -58,11 +58,24 @@ class embed::gpio::__GPIO_Pin {
          * @param alternate The alternate function to use.
          */
         void setAlternate(uint32_t alternate);
+
+        /**
+         * @brief Set the GPIO to be an analog pin.
+         */
+        void setAnalog();
+};
+
+class embed::gpio::_AnalogInput_Pin_specific {
+    public:
+        GPIO_Pin* gpio;
+        uint8_t channel;
+        volatile uint32_t* resultVariable;
 };
 
 //! STM32-specific GPIO declarations
 namespace embed::arch::arm::stm32::gpio {
     using namespace embed::gpio;
+    using namespace embed::arch::arm::stm32::LIBEMBED_MCU_LINE::gpio;
 
     //! Push-pull output configuration. Only applicable for outputs.
     GPIO_Flag PUSHPULL = 1;

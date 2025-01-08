@@ -16,7 +16,7 @@ namespace embed::gpio {
     /**
      * @brief Opaque data structure defining a hardware pin.
      */
-    typedef struct __GPIO_Pin GPIO_Pin;
+    typedef struct _GPIO_Pin_specific GPIO_Pin;
 
     //! Platform-specific GPIO flags
     typedef const uint32_t GPIO_Flag;
@@ -227,6 +227,68 @@ namespace embed::gpio {
              * @return Returns the current state of the input.
              */
             inline operator bool() { return read(); }
+    };
+
+    /**
+     * @brief Opaque data structure defining an analog input pin.
+     * 
+     * The internals of this are platform-specific. 
+     */
+    typedef struct _AnalogInput_Pin_specific AnalogInput_Pin;
+
+    /**
+     * @brief Represents an analog input.
+     * 
+     */
+    class AnalogInput {
+        private:
+            /**
+             * @brief Platform-specific initialization function.
+             * 
+             */
+            void init_specific_();
+
+            /**
+             * @brief Platform-specific ADC read function.
+             * 
+             * @return Returns a double between 0 and 1 indicating the analog value on the pin.
+             */
+            double read_specific_();
+
+        public:
+            /**
+             * @brief Analog input pin assigned to the AnalogInput.
+             */
+            AnalogInput_Pin& pin;
+
+            /**
+             * @brief Construct a new Analog Input object.
+             * 
+             * @param pin The pin you want to assing to the AnalogInput object.
+             */
+            AnalogInput(AnalogInput_Pin& pin);
+
+            /**
+             * @brief Reads the current value from the analog input.
+             * 
+             * @return Returns a number between 0 and 1 indicating the analog value on the pin.
+             */
+            double read();
+
+            /**
+             * @brief Conversion overload for `double`. Reads the current value
+             * from the analog input.
+             * 
+             * @return Returns a `double` between 0 and 1 indicating the analog value on the pin.
+             */
+            inline operator double() { return (float)read(); };
+            /**
+             * @brief Conversion overload for `float`. Reads the current value
+             * from the analog input.
+             * 
+             * @return Returns a `float` between 0 and 1 indicating the analog value on the pin.
+             */
+            inline operator float() { return (float)read(); };
     };
 }
 

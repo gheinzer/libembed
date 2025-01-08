@@ -5,3 +5,4 @@ src/main.c*
 .vscode/launch.json
 docs/output
 include/libembed_config.h
+*.local

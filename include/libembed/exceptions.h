@@ -17,6 +17,14 @@ namespace embed {
         public:
             using std::invalid_argument::invalid_argument;
     };
+
+    /**
+     * @brief Thrown when a fatal low-level error has occurred, e.g. a ADC overrun.
+     */
+    class lowlevel_error : public std::runtime_error {        
+        public:
+            using std::runtime_error::runtime_error;
+    };
 }
 
 #endif /* LIBEMBED_EXCEPTIONS_H_ */

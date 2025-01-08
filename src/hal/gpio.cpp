@@ -27,3 +27,11 @@ bool gpio::DigitalInput::read() {
     bool state = read_specific_();
     return inverted ? !state : state;
 }
+
+gpio::AnalogInput::AnalogInput(AnalogInput_Pin& pin) : pin(pin) {
+    init_specific_();
+}
+
+double gpio::AnalogInput::read() {
+    return read_specific_();
+}

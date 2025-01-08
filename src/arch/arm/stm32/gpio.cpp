@@ -1,7 +1,8 @@
 #include <libembed/arch/arm/stm32/gpio.h>
 #include <libembed/hal/gpio/types.h>
+#include <libembed/arch/ident.h>
 
-#if LIBEMBED_PLATFORM == ststm32
+#if STM32
 
 using namespace embed::arch::arm::stm32;
 
@@ -12,11 +13,25 @@ void __enable_clocks() {
 }
 
 // *** gpio::__GPIO_Pin ***
-void embed::gpio::__GPIO_Pin::setAlternate(uint32_t alternate) {
+void embed::gpio::_GPIO_Pin_specific::setAlternate(uint32_t alternate) {
+    __enable_clocks();
+
     GPIO_InitTypeDef initStruct;
     initStruct.Pin = pin;
     initStruct.Alternate = alternate;
     initStruct.Mode = GPIO_MODE_AF_PP;
+    initStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    initStruct.Pull = GPIO_NOPULL;
+
+    HAL_GPIO_Init(port, &initStruct);
+}
+
+void embed::gpio::_GPIO_Pin_specific::setAnalog() {
+    __enable_clocks();
+
+    GPIO_InitTypeDef initStruct;
+    initStruct.Pin = pin;
+    initStruct.Mode = GPIO_MODE_ANALOG;
     initStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     initStruct.Pull = GPIO_NOPULL;
 

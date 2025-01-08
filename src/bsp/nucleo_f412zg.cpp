@@ -19,8 +19,8 @@
     gpio::DigitalInput& board::user_button = B1;
 
     uart::HardwareUART board::UART_VCP(uart::UART3);
-    gpio::__GPIO_Pin& board::UART_VCP_TX = gpio::PD8;
-    gpio::__GPIO_Pin& board::UART_VCP_RX = gpio::PD9;
+    gpio::_GPIO_Pin_specific& board::UART_VCP_TX = gpio::PD8;
+    gpio::_GPIO_Pin_specific& board::UART_VCP_RX = gpio::PD9;
 
     static void __vcp_write(std::string data) {
         board::UART_VCP.write(data);

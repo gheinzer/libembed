@@ -12,7 +12,7 @@ def appendToEnv(environment):
 
     environment.Append(
         CPPDEFINES=list(environment.get("CPPDEFINES", [])) + defines,
-        CXXFLAGS=list(environment.get("CCFLAGS", [])) + flags
+        CXXFLAGS=list(environment.get("CXXFLAGS", [])) + flags
     )
 
 appendToEnv(DefaultEnvironment())

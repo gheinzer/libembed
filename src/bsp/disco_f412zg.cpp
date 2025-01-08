@@ -29,31 +29,31 @@
     gpio::DigitalInput& board::joystick_selection = JOY_SEL;
 
     uart::HardwareUART board::UART_VCP(uart::UART2);
-    gpio::__GPIO_Pin& board::UART_VCP_TX = gpio::PA2;
-    gpio::__GPIO_Pin& board::UART_VCP_RX = gpio::PA3;
+    gpio::_GPIO_Pin_specific& board::UART_VCP_TX = gpio::PA2;
+    gpio::_GPIO_Pin_specific& board::UART_VCP_RX = gpio::PA3;
 
-    gpio::__GPIO_Pin& board::arduino::A0 = gpio::PA1;
-    gpio::__GPIO_Pin& board::arduino::A1 = gpio::PC1;
-    gpio::__GPIO_Pin& board::arduino::A2 = gpio::PC3;
-    gpio::__GPIO_Pin& board::arduino::A3 = gpio::PC4;
-    gpio::__GPIO_Pin& board::arduino::A4 = gpio::PC5;
-    gpio::__GPIO_Pin& board::arduino::A5 = gpio::PB0;
-    gpio::__GPIO_Pin& board::arduino::D0 = gpio::PG9;
-    gpio::__GPIO_Pin& board::arduino::D1 = gpio::PG14;
-    gpio::__GPIO_Pin& board::arduino::D2 = gpio::PG13;
-    gpio::__GPIO_Pin& board::arduino::D3 = gpio::PF4;
-    gpio::__GPIO_Pin& board::arduino::D4 = gpio::PG12;
-    gpio::__GPIO_Pin& board::arduino::D5 = gpio::PF10;
-    gpio::__GPIO_Pin& board::arduino::D6 = gpio::PF3;
-    gpio::__GPIO_Pin& board::arduino::D7 = gpio::PG11;
-    gpio::__GPIO_Pin& board::arduino::D8 = gpio::PG10;
-    gpio::__GPIO_Pin& board::arduino::D9 = gpio::PB8;
-    gpio::__GPIO_Pin& board::arduino::D10 = gpio::PA15;
-    gpio::__GPIO_Pin& board::arduino::D11 = gpio::PA7;
-    gpio::__GPIO_Pin& board::arduino::D12 = gpio::PA6;
-    gpio::__GPIO_Pin& board::arduino::D13 = gpio::PA5;
-    gpio::__GPIO_Pin& board::arduino::D14 = gpio::PB9;
-    gpio::__GPIO_Pin& board::arduino::D15 = gpio::PB10;
+    gpio::_GPIO_Pin_specific& board::arduino::A0 = gpio::PA1;
+    gpio::_GPIO_Pin_specific& board::arduino::A1 = gpio::PC1;
+    gpio::_GPIO_Pin_specific& board::arduino::A2 = gpio::PC3;
+    gpio::_GPIO_Pin_specific& board::arduino::A3 = gpio::PC4;
+    gpio::_GPIO_Pin_specific& board::arduino::A4 = gpio::PC5;
+    gpio::_GPIO_Pin_specific& board::arduino::A5 = gpio::PB0;
+    gpio::_GPIO_Pin_specific& board::arduino::D0 = gpio::PG9;
+    gpio::_GPIO_Pin_specific& board::arduino::D1 = gpio::PG14;
+    gpio::_GPIO_Pin_specific& board::arduino::D2 = gpio::PG13;
+    gpio::_GPIO_Pin_specific& board::arduino::D3 = gpio::PF4;
+    gpio::_GPIO_Pin_specific& board::arduino::D4 = gpio::PG12;
+    gpio::_GPIO_Pin_specific& board::arduino::D5 = gpio::PF10;
+    gpio::_GPIO_Pin_specific& board::arduino::D6 = gpio::PF3;
+    gpio::_GPIO_Pin_specific& board::arduino::D7 = gpio::PG11;
+    gpio::_GPIO_Pin_specific& board::arduino::D8 = gpio::PG10;
+    gpio::_GPIO_Pin_specific& board::arduino::D9 = gpio::PB8;
+    gpio::_GPIO_Pin_specific& board::arduino::D10 = gpio::PA15;
+    gpio::_GPIO_Pin_specific& board::arduino::D11 = gpio::PA7;
+    gpio::_GPIO_Pin_specific& board::arduino::D12 = gpio::PA6;
+    gpio::_GPIO_Pin_specific& board::arduino::D13 = gpio::PA5;
+    gpio::_GPIO_Pin_specific& board::arduino::D14 = gpio::PB9;
+    gpio::_GPIO_Pin_specific& board::arduino::D15 = gpio::PB10;
 
     static void __vcp_write(std::string data) {
         board::UART_VCP.write(data);

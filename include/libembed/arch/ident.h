@@ -13,6 +13,9 @@
 
 // *** Default values ***
 // STM32
+    //! Indicates that a STM32 series MCU has been used
+    #define STM32 0
+
     //! Indicates that a STM32F412xx series MCU has been used
     #define STM32F412xx 0
 
@@ -27,6 +30,9 @@
 
         #undef LIBEMBED_MCU_FAMILY
         #define LIBEMBED_MCU_FAMILY stm32
+
+        #undef STM32
+        #define STM32 1
 
         #if STM32F4 || __DOYXGEN__
 

@@ -39,9 +39,9 @@ namespace embed::board {
         extern uart::HardwareUART UART_VCP;
 
         //! TX pin for the virtual COM port VCP
-        extern embed::gpio::__GPIO_Pin& UART_VCP_TX;
+        extern embed::gpio::_GPIO_Pin_specific& UART_VCP_TX;
         //! RX pin for the virtual COM port VCP
-        extern embed::gpio::__GPIO_Pin& UART_VCP_RX;
+        extern embed::gpio::_GPIO_Pin_specific& UART_VCP_RX;
 
         /**
          * @brief Initialize the VCP with the specified baudrate
