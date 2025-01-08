@@ -72,6 +72,10 @@ namespace embed::i2c {
              * 
              * This can also be used to send a repeated start condition.
              * 
+             * @note This implements limited coroutine safety: Calls to @ref startMessage are queued
+             * and executed sequentially. However, this does not prevent you from mixing multiple
+             * messages.
+             * 
              * @param address Slave address to send.
              * @param direction Direction bit value to send.
              */
@@ -79,12 +83,20 @@ namespace embed::i2c {
 
             /**
              * @brief Stops the mesage, i.e. sends stop condition.
+             * 
+             * @note This implements limited coroutine safety: Calls to @ref stopMessage are queued
+             * and executed sequentially. However, this does not prevent you from mixing multiple
+             * messages.
              */
             virtual void stopMessage() = 0;
 
             /**
              * @brief Sends a byte to the interface and awaits an
              * acknowlegement.
+             * 
+             * @note This implements limited coroutine safety: Calls to @ref sendByte are queued
+             * and executed sequentially. However, this does not prevent you from mixing multiple
+             * messages.
              * 
              * @param data The data to send.
              * @return The acknowledgement which was returned from the slave device.
@@ -94,6 +106,10 @@ namespace embed::i2c {
             /**
              * @brief Reads a byte from the interface and returns the
              * specified acknowledgement.
+             * 
+             * @note This implements limited coroutine safety: Calls to @ref readByte are queued
+             * and executed sequentially. However, this does not prevent you from mixing multiple
+             * messages.
              * 
              * @param ackType Whether to return a `ACK` or `NACK` upon receiving the data.
              * @return The received data.
