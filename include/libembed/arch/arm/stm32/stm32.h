@@ -6,6 +6,7 @@
 
 #include "gpio.h"
 #include "uart.h"
+#include "i2c.h"
 
 //! STM32-specific declarations
 namespace embed::arch::arm::stm32 { }
