@@ -11,7 +11,7 @@
 #ifndef LIBEMBED_DEBUG_H_
 #define LIBEMBED_DEBUG_H_
 
-#if LIBEMBED_CONFIG_ENABLE_DEBUGGING == true
+#if LIBEMBED_CONFIG_ENABLE_DEBUGGING
 
 #if LIBEMBED_CONFIG_ENABLE_DEBUGLEVEL_INFO == true
     #define libembed_debug_info(message) embed::debug::info(message, __func__);

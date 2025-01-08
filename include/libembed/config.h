@@ -11,7 +11,7 @@
 #ifndef LIBEMBED_CONFIG_H_
 #define LIBEMBED_CONFIG_H_
 
-#if !__DOXYGEN__
+#if !defined(__DOXYGEN__)
 
     #if __has_include(<libembed_config.h>)
         #include <libembed_config.h>
@@ -86,7 +86,7 @@
      * 
      * Default value: `false`
      */
-    #define LIBEMBED_CONFIG_ENABLE_DEBUGGING true
+    #define LIBEMBED_CONFIG_ENABLE_DEBUGGING false
 
     /**
      * @brief Enables the debug level `INFO`.
