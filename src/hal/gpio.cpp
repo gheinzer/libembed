@@ -13,6 +13,10 @@ void gpio::DigitalOutput::write(bool state) {
     write_specific_(inverted ? !state : state);
 }
 
+bool gpio::DigitalOutput::read() {
+    return read_specific_();
+}
+
 void gpio::DigitalOutput::disable() { write(false); }
 void gpio::DigitalOutput::enable() { write(true); }
 void gpio::DigitalOutput::toggle() { toggle_specific_(); }
