@@ -59,7 +59,7 @@
         board::UART_VCP.write(data);
     }
 
-    void board::beginVCP(uart::Baudrate baudrate) {
+    void board::disco_f412zg::beginVCP(uart::Baudrate baudrate) {
         board::UART_VCP_RX.setAlternate(GPIO_AF7_USART2);
         board::UART_VCP_TX.setAlternate(GPIO_AF7_USART2);
         board::UART_VCP.begin(baudrate);
