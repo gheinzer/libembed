@@ -14,7 +14,7 @@ void gpio::DigitalOutput::write(bool state) {
 }
 
 bool gpio::DigitalOutput::read() {
-    return read_specific_();
+    return inverted ? !read_specific_() : read_specific_();
 }
 
 void gpio::DigitalOutput::disable() { write(false); }
@@ -28,8 +28,7 @@ gpio::DigitalInput::DigitalInput(GPIO_Pin& pin, bool inverted, GPIO_Flag flags) 
 gpio::DigitalInput::DigitalInput(GPIO_Pin& pin, GPIO_Flag flags) : DigitalInput(pin, false, flags) { }
 
 bool gpio::DigitalInput::read() {
-    bool state = read_specific_();
-    return inverted ? !state : state;
+    return inverted ? !read_specific_() : read_specific_();
 }
 
 gpio::AnalogInput::AnalogInput(AnalogInput_Pin& pin) : pin(pin) {
