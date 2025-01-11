@@ -78,6 +78,25 @@ namespace embed::util {
             }
 
             /**
+             * @brief Operator overload for the `^=` operator
+             * 
+             * @param data The data to perform the operation with.
+             */
+            void operator ^=(uint64_t data) { operator=((operator uint64_t()) ^ data); }
+            /**
+             * @brief Operator overload for the `&=` operator
+             * 
+             * @param data The data to perform the operation with.
+             */
+            void operator &=(uint64_t data) { operator=((operator uint64_t()) & data); }
+            /**
+             * @brief Operator overload for the `|=` operator
+             * 
+             * @param data The data to perform the operation with.
+             */
+            void operator |=(uint64_t data) { operator=((operator uint64_t()) | data); }
+
+            /**
              * @brief Conversion overload for `uint64_t`. Reads the binary value of
              * the buffer.
              * 
@@ -208,6 +227,25 @@ namespace embed::util {
                     *(objects_[bit]) = (bool)((data & (1 << bit)) >= 1);
                 }
             }
+
+            /**
+             * @brief Operator overload for the `^=` operator
+             * 
+             * @param data The data to perform the operation with.
+             */
+            void operator ^=(uint64_t data) { operator=((operator uint64_t()) ^ data); }
+            /**
+             * @brief Operator overload for the `&=` operator
+             * 
+             * @param data The data to perform the operation with.
+             */
+            void operator &=(uint64_t data) { operator=((operator uint64_t()) & data); }
+            /**
+             * @brief Operator overload for the `|=` operator
+             * 
+             * @param data The data to perform the operation with.
+             */
+            void operator |=(uint64_t data) { operator=((operator uint64_t()) | data); }
 
             /**
              * @brief Conversion overload for `uint64_t`. Reads the binary value of
