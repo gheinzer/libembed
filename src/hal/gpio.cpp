@@ -21,7 +21,7 @@ void gpio::DigitalOutput::disable() { write(false); }
 void gpio::DigitalOutput::enable() { write(true); }
 void gpio::DigitalOutput::toggle() { toggle_specific_(); }
 
-gpio::DigitalInput::DigitalInput(GPIO_Pin& pin, bool inverted, GPIO_Flag flags) : inverted(inverted), flags(flags), gpio(pin) {
+gpio::DigitalInput::DigitalInput(GPIO_Pin& pin, bool inverted, GPIO_Flag flags) : inverted(inverted), flags(flags), gpio(pin), edge(*this) {
     init_specific_();
 }
 

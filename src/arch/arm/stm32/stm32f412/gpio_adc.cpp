@@ -66,8 +66,6 @@ static void adc_addChannel(gpio::AnalogInput_Pin& pin) {
     // Configure the channel's sample time
     MODIFY_REG(*smpr_registerPtr, ((~0b110) & 0b111) << smpr_registerShift, 0b110 << smpr_registerShift);
 
-    volatile uint32_t test = ADC1->SQR3;
-
     pin.gpio->setAnalog();
 
     pin.resultVariable = &(results[rank]);

@@ -4,6 +4,7 @@
  * @brief Common type definitions for @ref libembed/hal/gpio.h.
  */
 #include <stdint.h>
+#include <libembed/util/util.h>
 
 #ifndef LIBEMBED_HAL_GPIO_TYPES_H_
 #define LIBEMBED_HAL_GPIO_TYPES_H_
@@ -196,6 +197,11 @@ namespace embed::gpio {
              * 
              */
             const GPIO_Pin& gpio;
+
+            /**
+             * @brief Built-in edge detector for the digital input.
+             */
+            util::EdgeDetector<DigitalInput> edge;
 
             /**
              * @brief Construct a new digital niput object.
