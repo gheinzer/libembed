@@ -44,6 +44,10 @@ void coroutines::__yield() {
 coroutines::Coroutine_Base::Coroutine_Base(size_t stackSize) : stackSize(stackSize) {
 }
 
+coroutines::Coroutine_Base::~Coroutine_Base() {
+    stop();
+}
+
 void coroutines::Coroutine_Base::start() {
     if(!isActive) {
         activeCoroutines_.push_back(this);
@@ -69,6 +73,10 @@ void coroutines::Coroutine_Base::pause() {
 void coroutines::Coroutine_Base::resume() {
     if(isActive)
         isPaused = false;
+}
+
+void coroutines::Coroutine_Base::togglePause() {
+    isPaused ? resume() : pause();
 }
 
 void coroutines::Coroutine_Base::__yield() {

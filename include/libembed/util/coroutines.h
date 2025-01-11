@@ -176,6 +176,12 @@
                 Coroutine_Base(size_t stackSize);
 
                 /**
+                 * @brief Destroy the @ref Coroutine_Base object
+                 * and stop all running coroutines.
+                 */
+                ~Coroutine_Base();
+
+                /**
                  * @brief Lambda function for calling the entry point with the given arguments.
                  * 
                  * Implemented in the template class @ref Coroutine.
@@ -250,6 +256,16 @@
                  *  - @ref pause
                  */
                 void resume();
+
+                /**
+                 * @brief Toggles the coroutines pause state, i.e. pauses
+                 * it if it is running or resumes it if it is paused.
+                 * 
+                 * @see
+                 *  - @ref pause()
+                 *  - @ref resume()
+                 */
+                void togglePause();
         };
 
         /**
