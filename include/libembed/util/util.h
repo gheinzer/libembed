@@ -68,8 +68,7 @@ namespace embed::util {
              */
             void operator =(uint64_t data) {
                 for(size_t bit = 0; bit < size; bit++) {
-                    T* currentBit = objects_[bit];
-                    *currentBit = ((data & (1 << bit)) >= 1);
+                    *(objects_[bit]) = (bool)((data & (1 << bit)) >= 1);
                 }
             }
 
@@ -83,7 +82,7 @@ namespace embed::util {
             operator uint64_t() {
                 uint64_t data = 0;
                 for(size_t bit = 0; bit < size; bit++) {
-                    data |= ((bool)(*(objects_[bit])) << bit);
+                    SET_BIT(data, (bool)(*(objects_[bit])) << bit);
                 }
                 return data;
             }
@@ -195,8 +194,7 @@ namespace embed::util {
              */
             void operator =(uint64_t data) {
                 for(size_t bit = 0; bit < size; bit++) {
-                    T* currentBit = objects_[bit];
-                    *currentBit = ((data & (1 << bit)) >= 1);
+                    *(objects_[bit]) = (bool)((data & (1 << bit)) >= 1);
                 }
             }
 
@@ -210,7 +208,7 @@ namespace embed::util {
             operator uint64_t() {
                 uint64_t data = 0;
                 for(size_t bit = 0; bit < size; bit++) {
-                    data |= ((bool)(*(objects_[bit])) << bit);
+                    SET_BIT(data, (bool)(*(objects_[bit])) << bit);
                 }
                 return data;
             }
