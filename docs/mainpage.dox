@@ -8,4 +8,5 @@ library.
 
 Refer to the following tutorials to get started:
 - @subpage tutorials/coroutines
+- @subpage tutorials/gpio
 */

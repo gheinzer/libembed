@@ -1,0 +1,78 @@
+/**
+@page tutorials/gpio Accessing your microcontroller's GPIO
+Microcontrollers have a number of peripherals, and one of them is are the GPIOs (General-Purpose Inputs and Outputs).
+
+In `libembed` they can be accessed by using the GPIO HAL, i.e. including the file `libembed/hal/gpio.h` and using the namespace
+@ref embed::gpio.
+
+@section gpio-digital-inputs Digital inputs
+Digital inputs can be represented using the @ref embed::gpio::DigitalInput class. This only requires you to pass the physical
+pin you want to access, and it initalizes everything for you.
+
+@warning You must not assign the same physical pins to multiple uses, e.g. @ref embed::gpio::DigitalInput and @ref embed::gpio::DigitalOutput.
+The initializations of the two classes will conflict, which results in unexpected behaviour.
+
+Along with the physical @ref embed::gpio::GPIO_Pin you can pass any number of plaform-dependent flags. For example, some platforms may implement
+internal pull-up or pull-down resistors, which you can enable using `embed::gpio::PULLUP`. Please refer to the platform-specific namespace
+documentations for additional information.
+
+You can also configure the `DigitalInput` to be inverted. This means that the actual value read from the GPIO pin is inverted
+by `DigitalInput` and then returned. This may be useful when using buttons which switch to ground, or any other inverted circuitry.
+
+@code{.cpp}
+// Create a new DigitalInput for the pin PA5
+DigitalInput button1(gpio::PA5);
+
+// Create a new, inverted DigitalInput for the pin PA7
+DigitalInput button2(gpio::PA7, true);
+
+// Create a new DigitalInput for the pin PB3 with enabled pull-up resistors
+DigitalInput button3(gpio::PB3, false, gpio::PULLUP);
+@endcode
+
+You can now read the state of the digital input by using the @ref embed::gpio::DigitalInput::read function. Alternatively,
+you can cast it to a bool, which also returns the current state of the input (though this also calls `read()` under the hood).
+
+@section gpio-digital-output Digital Outputs
+If you want to use digital outputs, you can instantiate a new @ref embed::gpio::DigitalOutput class. Similarly to
+@ref embed::gpio::DigitalInput, you can also configure this to be inverted. You may also be able to pass platform-specific
+arguments.
+
+@code{.cpp}
+// Create a new DigitalOutput for the pin PA4
+DigitalOutput led1(gpio::PA4);
+
+// Create a new, inverted DigitalOutput for the pin PC2
+DigitalOutput led2(gpio::PC2, true);
+
+// Create a new, inverted and open-drain-mode DigitalOutput for the pin PB4
+DigitalOutput led3(gpio::PB4, true, gpio::OPENDRAIN);
+@endcode
+
+You can now do all the same things you can do with a @ref embed::gpio::DigitalInput, and also set the value of the output. This can be done
+using the assignment operator `=`, or the `set()` method. You can also toggle the input with the `^=` operator, or the `toggle()`
+method.
+
+Note that the `^=` operator only toggles the input if it receives a non-zero value.
+
+@section gpio-analog-input Analog Inputs
+Some microcontrollers include an ADC, i.e. a analog-to-digital converter unit. This can be accessed using the @ref embed::gpio::AnalogInput class.
+This class automatically initializes the pin to the necessary mode and configures the ADC of the microcontroller.
+
+You can then access the analog values using the `read()` function, or just by casting to a floating-pointer number like
+`float` or `double`.
+
+When instantiating @ref embed::gpio::AnalogInput, you have to pass the hardware pin which you want to read from.
+
+@code{.cpp}
+// Create a new instance of AnalogInput for the pin PC5
+AnalogInput potentiometer(gpio::PC5);
+@endcode
+
+@section gpio-bsp BSPs
+Some boards include built-in hardware which is ready to be used by the microcontroller. `libembed` contains the corresponding
+board support packages (BSPs) which pre-defined `DigitalInput` and `DigitalOutput` classes.
+
+You only have to include the `libembed/bsp/autobsp.h` file, which in turn includes the correct BSP using preprocessor directives.
+This initializes all the GPIOs to their required state and provides the according handles to the user software.
+*/
