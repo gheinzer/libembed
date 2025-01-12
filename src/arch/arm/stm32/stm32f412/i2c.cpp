@@ -101,9 +101,10 @@ uint8_t i2c::HardwareI2C_Master::readByte(i2c::AcknowledgementType ackType) {
     i2cLock.acquire();
 
     while(!READ_BIT(interface.interface->SR1, I2C_SR1_RXNE)) { yield; };
-    return interface.interface->DR;
 
     i2cLock.release();
+
+    return interface.interface->DR;
 };
 
 #endif
