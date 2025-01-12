@@ -1,8 +1,9 @@
 #include <libembed/util/coroutines.h>
 #include <libembed/hal/clock/types.h>
 #include <libembed/arch/arm/stm32/stm32_hal.h>
+#include <libembed/arch/ident.h>
 
-#if LIBEMBED_PLATFORM == ststm32
+#if STM32
 
 using namespace embed;
 
