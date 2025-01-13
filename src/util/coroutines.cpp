@@ -60,10 +60,10 @@ void coroutines::Coroutine_Base::start() {
 
 void coroutines::Coroutine_Base::stop() {
     activeCoroutines_.erase(std::remove(activeCoroutines_.begin(), activeCoroutines_.end(), this), activeCoroutines_.end());
-    isActive = false;
-    wasCalled_ = false;
-    isPaused = false;
-    libembed_debug_trace("Coroutine " + name + " stopped.");
+    this->isActive = false;
+    this->wasCalled_ = false;
+    this->isPaused = false;
+    libembed_debug_trace("Coroutine " + this->name + " stopped.");
 }
 
 void coroutines::Coroutine_Base::pause() {
@@ -80,29 +80,49 @@ void coroutines::Coroutine_Base::togglePause() {
     isPaused ? resume() : pause();
 }
 
+// Internal coroutine states used by setjmp/longjmp
+typedef enum {
+    SETJMP_EXECUTED = 0,
+    EXITED = 1,
+    ERRORED = 2,
+    YIELDED = 3
+} CoroutineState;
+
 void coroutines::Coroutine_Base::__yield() {
     if(!setjmp(resumeBuf_)) {
-        longjmp(yieldBuf_, 1); // Jump back to the scheduler
+        longjmp(yieldBuf_, YIELDED); // Jump back to the scheduler
     }
 }
 
 void coroutines::Coroutine_Base::__start_or_resume() {
     if(isPaused) return; // Don't resume if the coroutine is currently paused
-    if(!setjmp(yieldBuf_)) {
-        libembed_debug_trace("Coroutine " + name + " resumed.");
+    CoroutineState state = (CoroutineState)setjmp(yieldBuf_);
+    if(state == SETJMP_EXECUTED) {
+        libembed_debug_trace("Coroutine " + name + " resuming...");
         if(!wasCalled_) {
             wasCalled_ = true;
-            libembed_try {
-                runFromEntryPoint_();
-            } libembed_catch {
-                libembed_debug_info("Coroutine " + name + " threw an error.")                
-            }
+            runFromEntryPoint_();
         } else {
-            longjmp(resumeBuf_, 1); // Jump into the execution
+            longjmp(resumeBuf_, 1); // Jump back into the coroutine
         }
-    } else {
+    } else if(state == YIELDED) {
         libembed_debug_trace("Coroutine " + name + " yielded.");
+    } else if(state == EXITED) {
+        libembed_debug_info("Coroutine " + name + " exited.");
+        this->stop();
+    } else if(state == ERRORED) {
+        libembed_debug_info("Coroutine " + name + " errored.");
+        this->stop();
     }
+}
+
+void coroutines::Coroutine_Base::callEntryPoint_() {
+    libembed_try {
+        this->entryPointCaller_();
+    } libembed_catch {
+        longjmp(yieldBuf_, ERRORED);
+    }
+    longjmp(yieldBuf_, EXITED);
 }
 
 void coroutines::Coroutine_Base::join() {

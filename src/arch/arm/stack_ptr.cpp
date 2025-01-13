@@ -30,10 +30,7 @@ void embed::coroutines::Coroutine_Base::runFromEntryPoint_() {
     );
 
     // Call the coroutine entry point
-    this->entryPointCaller_();
-
-    this->stop();
-    this->__yield();
+    this->callEntryPoint_();
 }
 
 #endif

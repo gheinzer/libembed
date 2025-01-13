@@ -158,6 +158,8 @@
                  */
                 void runFromEntryPoint_();
 
+                void callEntryPoint_();
+
                 /**
                  * @brief Stack allocator for allocating the coroutine's stack.
                  * This is stored as a shared_ptr so the stack allocator can be allocated
