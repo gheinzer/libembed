@@ -383,12 +383,12 @@ namespace embed::util {
             //! Internal state structure
             class State {
                 public:
-                    //! Whether the @ref previousState variable is initialized
+                    //! Whether the `previousState` variable is initialized
                     bool initialized : 1;
                     //! State of the polling target at the end of the previous call
                     bool previousState : 1;
 
-                    //! Constructs a new @ref State object
+                    //! Constructs a new `State` object
                     State() : initialized(false) {};
             };
 

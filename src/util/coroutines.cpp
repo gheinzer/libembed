@@ -1,5 +1,6 @@
 #include <libembed/util/coroutines.h>
 #include <libembed/util/debug.h>
+#include <libembed/util/exceptions.h>
 #include <libembed/config.h>
 #include <vector>
 #include <algorithm>
@@ -91,7 +92,11 @@ void coroutines::Coroutine_Base::__start_or_resume() {
         libembed_debug_trace("Coroutine " + name + " resumed.");
         if(!wasCalled_) {
             wasCalled_ = true;
-            runFromEntryPoint_();
+            libembed_try {
+                runFromEntryPoint_();
+            } libembed_catch {
+                libembed_debug_info("Coroutine " + name + " threw an error.")                
+            }
         } else {
             longjmp(resumeBuf_, 1); // Jump into the execution
         }

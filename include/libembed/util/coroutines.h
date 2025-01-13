@@ -13,6 +13,7 @@
 #include <memory>
 #include <functional>
 #include <stdint.h>
+#include <setjmp.h>
 #include <libembed/config.h>
 #include <libembed/util/debug.h>
 
@@ -213,6 +214,13 @@
                  *  - @ref resume()
                  */
                 bool isPaused = false;
+                
+                #if LIBEMBED_CONFIG_ENABLE_DEBUGGING
+                    /**
+                     * @brief Coroutine name (for debugging purposes).
+                     */
+                    std::string name = "<unknown>";
+                #endif /* LIBEMBED_CONFIG_ENABLE_DEBUGGING */
 
                 /**
                  * @internal

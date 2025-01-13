@@ -2,7 +2,7 @@
 #include <libembed/hal/gpio.h>
 #include <libembed/util/coroutines.h>
 #include <libembed/arch/ident.h>
-#include <libembed/exceptions.h>
+#include <libembed/util/exceptions.h>
 
 #if STM32F412xx
 
@@ -36,7 +36,7 @@ static volatile uint8_t usedRanks = 0;
  * @param channel Channel number to add.
  */
 static void adc_addChannel(gpio::AnalogInput_Pin& pin) {
-    if(usedRanks >= 16) throw std::runtime_error("ADC fully occupied.");
+    if(usedRanks >= 16) embed::exceptions::throw_exception(embed::exceptions::exception("ADC fully occupied."));
     
     uint8_t rank = usedRanks;
     usedRanks++;
