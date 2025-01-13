@@ -64,6 +64,21 @@
         extern Coroutine_Base* current;
 
         /**
+         * @brief Enumerator defining possible reasons for a coroutine exiting.
+         * 
+         * @see
+         *  - @ref Coroutine.getExitReason()
+         */
+        typedef enum {
+            //! The coroutine did not exit yet
+            EXIT_REASON_NONE,
+            //! The coroutine entry point returned
+            EXIT_REASON_RETURN,
+            //! The coroutine entry point errored
+            EXIT_REASON_ERRORED
+        } ExitReason;
+
+        /**
          * @brief Base interface of a stack allocator containing a pointer to the
          * beginning and a pointer to the end of the stack.
          * 
@@ -134,6 +149,10 @@
                  */
                 jmp_buf resumeBuf_;
                 
+                /**
+                 * @brief Last exit reason of the coroutine.
+                 */
+                ExitReason exitReason_ = EXIT_REASON_NONE;
 
                 /**
                  * @brief Specifies if the entry point has been called yet.
@@ -269,6 +288,13 @@
                  *  - @ref resume()
                  */
                 void togglePause();
+
+                /**
+                 * @brief Get the last exit reason of the coroutine.
+                 * 
+                 * @return The reason the coroutine exited. 
+                 */
+                ExitReason getExitReason();
         };
 
         /**

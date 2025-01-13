@@ -48,6 +48,7 @@ void coroutines::Coroutine_Base::start() {
         activeCoroutines_.push_back(this);
         isActive = true;
         isPaused = false;
+        exitReason_ = EXIT_REASON_NONE;
         libembed_debug_trace("Coroutine " + name + " started.");
     }
 }
@@ -104,9 +105,11 @@ void coroutines::Coroutine_Base::__start_or_resume() {
     } else if(state == EXITED) {
         libembed_debug_info("Coroutine " + name + " exited.");
         this->stop();
+        this->exitReason_ = EXIT_REASON_RETURN;
     } else if(state == ERRORED) {
         libembed_debug_info("Coroutine " + name + " errored.");
         this->stop();
+        this->exitReason_ = EXIT_REASON_ERRORED;
     }
 }
 
@@ -121,6 +124,10 @@ void coroutines::Coroutine_Base::callEntryPoint_() {
 
 void coroutines::Coroutine_Base::join() {
     while(isActive) yield;
+}
+
+coroutines::ExitReason coroutines::Coroutine_Base::getExitReason() {
+    return exitReason_;
 }
 
 void coroutines::Lock::acquire() {
