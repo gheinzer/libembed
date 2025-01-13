@@ -158,6 +158,10 @@
                  */
                 void runFromEntryPoint_();
 
+                /**
+                 * @brief Calls the entry point and also handles any errors in
+                 * the entry point.
+                 */
                 void callEntryPoint_();
 
                 /**
