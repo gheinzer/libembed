@@ -42,7 +42,7 @@ void i2c::HardwareI2C_Master::begin(i2c::ClockFrequency freq) {
     SET_BIT(interface.interface->CR1, I2C_CR1_PE);
 };
 
-void i2c::HardwareI2C_Master::startMessage(i2c::Address_7B address, i2c::Direction direction) {
+i2c::AcknowledgementType i2c::HardwareI2C_Master::startMessage(i2c::Address_7B address, i2c::Direction direction) {
     i2cLock.acquire();
 
     // Send a start condition
@@ -58,13 +58,25 @@ void i2c::HardwareI2C_Master::startMessage(i2c::Address_7B address, i2c::Directi
     interface.interface->DR = address << 1 | direction;
 
     // Wait for the slave address and R/W to be sent
-    while(!READ_BIT(interface.interface->SR1, I2C_SR1_ADDR)) { yield; }
+    AcknowledgementType ackType = ACK;
+    while(!READ_BIT(interface.interface->SR1, I2C_SR1_ADDR)) {
+        if(READ_BIT(interface.interface->SR1, I2C_SR1_AF)) {
+            // Acknowledgement failure
+            ackType = NACK;
+            CLEAR_BIT(interface.interface->SR1, I2C_SR1_AF);
+            break;
+        }
+
+        yield;
+    }
     
     // Clear the ADDR bit
     dummy = interface.interface->SR1 | interface.interface->SR2;
     while(READ_BIT(interface.interface->SR1, I2C_SR1_ADDR)) { yield; }
 
     i2cLock.release();
+
+    return ackType;
 };
 
 void i2c::HardwareI2C_Master::stopMessage() {
@@ -88,13 +100,20 @@ i2c::AcknowledgementType i2c::HardwareI2C_Master::sendByte(uint8_t data) {
     interface.interface->DR = data;
 
     // Wait for the byte to be transmitted
-    while(!READ_BIT(interface.interface->SR1, I2C_SR1_TXE)) { yield; }
+    AcknowledgementType ackType = ACK;
+    while(!READ_BIT(interface.interface->SR1, I2C_SR1_TXE)) {
+        if(READ_BIT(interface.interface->SR1, I2C_SR1_AF)) {
+            // Acknowledgement failure
+            ackType = NACK;
+            break;
+        }
 
-    AcknowledgementType returnVal = (AcknowledgementType)(READ_BIT(interface.interface->SR1, I2C_SR1_BTF) > 1);
+        yield;
+    }
 
     i2cLock.release();
 
-    return returnVal;
+    return ackType;
 };
 
 uint8_t i2c::HardwareI2C_Master::readByte(i2c::AcknowledgementType ackType) {

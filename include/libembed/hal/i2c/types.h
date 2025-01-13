@@ -78,8 +78,10 @@ namespace embed::i2c {
              * 
              * @param address Slave address to send.
              * @param direction Direction bit value to send.
+             * 
+             * @return Returns the type of acknowledgement received after the address byte.
              */
-            virtual void startMessage(Address_7B address, Direction direction) = 0;
+            virtual AcknowledgementType startMessage(Address_7B address, Direction direction) = 0;
 
             /**
              * @brief Stops the mesage, i.e. sends stop condition.

@@ -26,7 +26,7 @@ namespace embed::arch::arm::stm32::i2c {
             using HardwareI2C_Master_Base::HardwareI2C_Master_Base;
 
             void begin(ClockFrequency freq) override;
-            void startMessage(Address_7B address, Direction direction) override;
+            AcknowledgementType startMessage(Address_7B address, Direction direction) override;
             void stopMessage() override;
             AcknowledgementType sendByte(uint8_t data) override;
             uint8_t readByte(AcknowledgementType ackType = ACK) override;
