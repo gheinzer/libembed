@@ -16,8 +16,6 @@ uint8_t* embed::coroutines::__getStackPointer() {
     return sp;
 }
 
-uint8_t* embed::coroutines::__addStackPointer(uint8_t* sp, size_t offset) { return sp - offset; }
-
 void embed::coroutines::Coroutine_Base::runFromEntryPoint_() {
     // Clear the stack
     this->stackAllocatorPtr_->clear();

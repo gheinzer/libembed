@@ -54,19 +54,6 @@
          * @return Returns the current stack pointer as an `uint8_t*`.
          */
         uint8_t* __getStackPointer();
-        /**
-         * @internal
-         * @brief Internal function for adding two stack pointers together
-         * to form the stack pointer to the larger-size stack. For a
-         * down-growing stack, this will subtract @p offset from @p sp; for
-         * upward-groing stacks, this will add the two parameters.
-         * 
-         * @param sp The stack pointer you want to manipulate.
-         * @param offset The operand of the manipulation.
-         * @return Returns the newly calculated stack pointer without modifying the
-         * original @p sp variable.
-         */
-        uint8_t* __addStackPointer(uint8_t* sp, size_t offset);
 
         // Pre-declaration of the Coroutine_Base class
         struct Coroutine_Base;
@@ -130,6 +117,7 @@
                 }
         };
 
+
         /**
          * @brief Base class for a coroutine. Refer to the constructor for more information.
          * 
@@ -145,6 +133,7 @@
                  * @brief `setjmp`-buffer called when resuming execution.
                  */
                 jmp_buf resumeBuf_;
+                
 
                 /**
                  * @brief Specifies if the entry point has been called yet.
